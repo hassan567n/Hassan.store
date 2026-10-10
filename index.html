@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hassan Store - Multi-Device Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #050814;
+            --bg-card: rgba(15, 23, 42, 0.85);
+            --primary-neon: #00f0ff;
+            --secondary-neon: #ff007f;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(10, 15, 30, 0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo-box h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* بنر تحميل المتجر */
+        .download-store-banner {
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), rgba(255, 0, 127, 0.15));
+            border: 1px solid var(--primary-neon);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 50px auto;
+            max-width: 600px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .download-store-banner span {
+            font-weight: 900;
+            font-size: 20px;
+        }
+
+        .download-store-banner button {
+            background: var(--primary-neon);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .admin-plus-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 900;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+
+        /* محتوى المتجر والألعاب (مخفي افتراضياً في المتصفح، ويظهر فقط داخل تطبيق APK) */
+        #storeContentBody {
+            display: none;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 25px 20px;
+        }
+
+        .container.mode-pc {
+            max-width: 1400px;
+        }
+        .container.mode-pc .games-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .container.mode-pc .game-card {
+            padding: 25px;
+            border-radius: 25px;
+        }
+
+        .container.mode-phone {
+            max-width: 480px;
+        }
+        .container.mode-phone .games-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .container.mode-phone .game-card {
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .search-bar-container {
+            display: flex;
+            gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .search-bar-container input, .search-bar-container select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-bar-container input { flex: 2; }
+        .search-bar-container select { flex: 1; }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .games-grid {
+            display: grid;
+            margin-bottom: 30px;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .game-icon-box {
+            width: 100%;
+            height: 140px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .game-icon-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .game-title {
+            font-size: 17px;
+            font-weight: 800;
+            margin: 0 0 4px 0;
+        }
+
+        .game-developer {
+            font-size: 12px;
+            color: var(--primary-neon);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-bottom: 10px;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-download-apk {
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
+            color: #000;
+            font-weight: 900;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: var(--text-sub);
+            padding: 30px;
+            font-size: 15px;
+            background: var(--bg-card);
+            border-radius: 15px;
+            border: 1px dashed var(--glass-border);
+            grid-column: 1 / -1;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--primary-neon);
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 480px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .theme-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .theme-card:hover {
+            border-color: var(--primary-neon);
+            transform: translateY(-2px);
+        }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 13px; color: var(--text-sub); }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 10px; border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); color: white; box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-box">
+            <h1>HASSAN STORE</h1>
+        </div>
+        <div class="nav-actions">
+            <button class="nav-btn" style="border-color: var(--primary-neon);" onclick="setDeviceMode('pc')">💻 PC</button>
+            <button class="nav-btn" style="border-color: var(--secondary-neon);" onclick="setDeviceMode('phone')">📱 Phone</button>
+            <button class="nav-btn" style="border-color: #ffc107;" onclick="openModal('themesModal')">🎨 الأنماط</button>
+            <button class="nav-btn" onclick="openModal('onboardingModal')">🎓 دليل</button>
+            <button class="nav-btn" onclick="openModal('uploadModal')">📤 رفع لعبة</button>
+            <button class="nav-btn" onclick="openAdminLoginModal()">🔑 الآدمن</button>
+            <button id="adminPlusBtn" class="admin-plus-btn" onclick="openModal('storeApkModal')" title="رفع ملف APK للمتجر">+</button>
+        </div>
+    </header>
+
+    <!-- في المتصفح العادي: سيظهر هذا البنر فقط ولا يظهر أي شيء آخر -->
+    <div id="browserOnlyBanner" class="download-store-banner">
+        <span>📥 أهلاً بك في متجر Hassan Store!<br>يرجى تحميل وتثبيت التطبيق على هاتفك للوصول إلى الألعاب واستخدام المتجر:</span>
+        <button onclick="handleStoreAction()">تحميل تطبيق المتجر (APK)</button>
+    </div>
+
+    <!-- محتوى المتجر والألعاب (يظهر فقط حصراً عند فتح التطبيق كـ APK مثبت) -->
+    <div id="storeContentBody">
+        <div class="container mode-pc" id="storeContainer">
+            <div class="search-bar-container">
+                <input type="text" id="searchInput" onkeyup="filterGames()" placeholder="🔍 ابحث عن لعبة...">
+                <select id="categoryFilter" onchange="filterGames()">
+                    <option value="all">🌐 الكل</option>
+                    <option value="action">⚔️ أكشن</option>
+                    <option value="racing">🏎️ سباقات</option>
+                    <option value="puzzle">🧩 ألغاز</option>
+                </select>
+            </div>
+
+            <div class="section-title">الألعاب الشائعة 🔥</div>
+            <div class="games-grid" id="trendingGrid"></div>
+
+            <div class="section-title">جميع الألعاب 🎮</div>
+            <div class="games-grid" id="gamesGrid"></div>
+        </div>
+    </div>
+
+    <!-- المودالات (النافذة المنبثقة) -->
+    <div id="adminLoginModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="color:var(--primary-neon); margin-top:0;">🔑 تسجيل دخول الآدمن</h2>
+            <form onsubmit="verifyAdminLogin(event)">
+                <div class="form-group">
+                    <label>البريد الإلكتروني للآدمن:</label>
+                    <input type="email" id="adminEmailInput" required placeholder="ادخل الإيميل الخاص بالآدمن">
+                </div>
+                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; font-weight:900;">دخول للوحة التحكم</button>
+            </form>
+            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:10px; cursor:pointer;" onclick="closeModal('adminLoginModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="themesModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="color:var(--primary-neon); margin-top:0;">🎨 اختر ثيم المتجر</h2>
+            <div class="themes-grid">
+                <div class="theme-card" style="border-color:#00f0ff;" onclick="applyTheme('#00f0ff', '#ff007f', '#050814')">🩵 نيون سيبر</div>
+                <div class="theme-card" style="border-color:#22c55e;" onclick="applyTheme('#22c55e', '#eab308', '#022c22')">🟢 زمردي</div>
+                <div class="theme-card" style="border-color:#a855f7;" onclick="applyTheme('#a855f7', '#ec4899', '#0f0728')">🔮 ملكي</div>
+                <div class="theme-card" style="border-color:#f97316;" onclick="applyTheme('#f97316', '#ef4444', '#1c0a00')">🔥 بركاني</div>
+            </div>
+            <button class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; margin-top:15px; font-weight:bold;" onclick="closeModal('themesModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="storeApkModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="color:var(--primary-neon); margin-top:0;">📦 رفع ملف APK الخاص بالمتجر</h2>
+            <form onsubmit="uploadStoreApkFile(event)">
+                <div class="form-group">
+                    <label>اختر ملف الـ APK الخاص بالمتجر:</label>
+                    <input type="file" id="storeApkInput" accept=".apk" required style="padding: 5px;">
+                </div>
+                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; font-weight:900;">حفظ ونشر APK المتجر</button>
+            </form>
+            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:8px; cursor:pointer;" onclick="closeModal('storeApkModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="onboardingModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="color:var(--primary-neon); margin-top:0;">🎓 دليل المبرمجين</h2>
+            <div style="background: rgba(255, 0, 127, 0.15); border: 1px solid var(--secondary-neon); padding: 10px; border-radius: 8px; color: #ff77a9; font-size: 12px; font-weight: bold; margin-bottom: 12px;">
+                ⚠️ قم ببرمجة لعبتك في ملف HTML باسم <code>index.html</code> ثم ارفعها عبر زر "رفع لعبة".
+            </div>
+            <button class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px;" onclick="closeModal('onboardingModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="uploadModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="color:var(--primary-neon); margin-top:0;">📤 رفع لعبة جديدة</h2>
+            <form onsubmit="submitGame(event)">
+                <div class="form-group"><label>اسم المطور:</label><input type="text" id="devName" required></div>
+                <div class="form-group"><label>اسم اللعبة:</label><input type="text" id="gameTitle" required></div>
+                <div class="form-group"><label>التصنيف:</label>
+                    <select id="gameCategory"><option value="action">أكشن</option><option value="racing">سباقات</option><option value="puzzle">ألغاز</option></select>
+                </div>
+                <div class="form-group"><label>🖼️ صورة اللعبة:</label><input type="file" id="gameImgFile" accept="image/*" style="padding: 5px;"></div>
+                <div class="form-group"><label>📄 ملف HTML:</label><input type="file" id="gameHtmlFile" accept=".html" required style="padding: 5px;"></div>
+                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; font-weight:900;">إرسال للمراجعة</button>
+            </form>
+            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:8px; cursor:pointer;" onclick="closeModal('uploadModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="color:var(--primary-neon); margin-top:0;">🔑 لوحة الآدمن</h2>
+            <div id="pendingGamesList" style="font-size: 13px; color: var(--text-sub);">جاري التحميل...</div>
+            <button class="nav-btn" style="width:100%; background:#ef4444; color:white; border:none; padding:10px; margin-top: 15px;" onclick="closeModal('adminModal')">إغلاق</button>
+        </div>
+  </div>
+      <script>
+        let games = JSON.parse(localStorage.getItem('hassan_store_v11_games')) || [];
+        let pendingGames = JSON.parse(localStorage.getItem('hassan_store_v11_pending')) || [];
+        let isAdmin = localStorage.getItem('hassan_store_is_admin') === 'true';
+        
+        const customThemes = [
+            { icon: '🚀', color: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15))', border: '#10b981' },
+            { icon: '⚡', color: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15))', border: '#f59e0b' },
+            { icon: '🔮', color: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15))', border: '#8b5cf6' },
+            { icon: '⚔️', color: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(168, 85, 247, 0.15))', border: '#ef4444' }
+        ];
+
+        function setDeviceMode(mode) {
+            const container = document.getElementById('storeContainer');
+            if (container) {
+                if (mode === 'pc') {
+                    container.className = 'container mode-pc';
+                    localStorage.setItem('hassan_device_mode', 'pc');
+                } else {
+                    container.className = 'container mode-phone';
+                    localStorage.setItem('hassan_device_mode', 'phone');
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedMode = localStorage.getItem('hassan_device_mode') || 'pc';
+            setDeviceMode(savedMode);
+            loadSavedTheme();
+            checkEnvironment();
+            checkAdminStatus();
+            renderGames();
+        });
+
+        function loadSavedTheme() {
+            const savedPrimary = localStorage.getItem('hassan_theme_primary');
+            const savedSecondary = localStorage.getItem('hassan_theme_secondary');
+            const savedBg = localStorage.getItem('hassan_theme_bg');
+            if(savedPrimary && savedSecondary && savedBg) {
+                document.documentElement.style.setProperty('--primary-neon', savedPrimary);
+                document.documentElement.style.setProperty('--secondary-neon', savedSecondary);
+                document.documentElement.style.setProperty('--bg-main', savedBg);
+            }
+        }
+
+        // التحقق من البيئة: إذا فتح من المتصفح يظهر فقط بنر التحميل، وإذا فتح كتطبيق APK تظهر واجهة الألعاب الكاملة
+        function checkEnvironment() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+            const browserBanner = document.getElementById('browserOnlyBanner');
+            const storeContent = document.getElementById('storeContentBody');
+
+            if (isStandalone) {
+                // فتح التطبيق من الهاتف (APK): إخفاء بنر التحميل وإظهار المتجر والألعاب بالكامل
+                if (browserBanner) browserBanner.style.display = 'none';
+                if (storeContent) storeContent.style.display = 'block';
+            } else {
+                // فتح الموقع من المتصفح العادي: إظهار بنر التحميل فقط وإخفاء الألعاب تماماً
+                if (browserBanner) browserBanner.style.display = 'flex';
+                if (storeContent) storeContent.style.display = 'none';
+            }
+        }
+
+        function applyTheme(primary, secondary, bg) {
+            document.documentElement.style.setProperty('--primary-neon', primary);
+            document.documentElement.style.setProperty('--secondary-neon', secondary);
+            document.documentElement.style.setProperty('--bg-main', bg);
+            
+            localStorage.setItem('hassan_theme_primary', primary);
+            localStorage.setItem('hassan_theme_secondary', secondary);
+            localStorage.setItem('hassan_theme_bg', bg);
+            
+            closeModal('themesModal');
+        }
+
+        function checkAdminStatus() {
+            const plusBtn = document.getElementById('adminPlusBtn');
+            if (isAdmin && plusBtn) {
+                plusBtn.style.display = 'flex';
+            } else if (plusBtn) {
+                plusBtn.style.display = 'none';
+            }
+        }
+
+        function openAdminLoginModal() {
+            if (isAdmin) {
+                renderPendingList();
+                openModal('adminModal');
+            } else {
+                openModal('adminLoginModal');
+            }
+        }
+
+        function verifyAdminLogin(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('adminEmailInput').value.trim();
+            if (emailInput === 'alaaraad990999@gmail.com') {
+                isAdmin = true;
+                localStorage.setItem('hassan_store_is_admin', 'true');
+                checkAdminStatus();
+                closeModal('adminLoginModal');
+                renderPendingList();
+                openModal('adminModal');
+            } else {
+                alert('عذراً، البريد الإلكتروني غير صحيح!');
+            }
+        }
+
+        function handleStoreAction() {
+            const storeApkData = localStorage.getItem('hassan_store_apk_file');
+            const storeApkName = localStorage.getItem('hassan_store_apk_name') || 'HassanStore.apk';
+
+            if (storeApkData) {
+                const a = document.createElement("a");
+                a.href = storeApkData;
+                a.download = storeApkName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                alert('عذراً، لم يقم الآدمن برفع ملف الـ APK الخاص بالمتجر حتى الآن من زر زائد ( + ) في لوحة التحكم!');
+            }
+        }
+
+        function uploadStoreApkFile(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('storeApkInput');
+            if (!fileInput.files || fileInput.files.length === 0) return;
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(evt) {
+                localStorage.setItem('hassan_store_apk_file', evt.target.result);
+                localStorage.setItem('hassan_store_apk_name', file.name);
+                alert('تم حفظ ملف APK المتجر بنجاح!');
+                closeModal('storeApkModal');
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function renderGames() {
+            const gamesGrid = document.getElementById('gamesGrid');
+            const trendingGrid = document.getElementById('trendingGrid');
+            if(!gamesGrid || !trendingGrid) return;
+            
+            gamesGrid.innerHTML = '';
+            trendingGrid.innerHTML = '';
+
+            if (games.length === 0) {
+                gamesGrid.innerHTML = `<div class="empty-message">لا توجد ألعاب حالياً في المتجر.</div>`;
+            }
+            
+            let trendingList = games.filter(g => g.isTrending);
+            if (trendingList.length === 0) {
+                trendingGrid.innerHTML = `<div class="empty-message">لا توجد ألعاب شائعة حالياً.</div>`;
+            }
+
+            games.forEach(game => {
+                const iconOrImage = game.imgData 
+                    ? `<img src="${game.imgData}" alt="${game.title}">` 
+                    : (game.icon || '🎮');
+
+                const cardHTML = `
+                    <div class="game-card" style="border: 1px solid ${game.border || '#00f0ff'}; box-shadow: 0 8px 20px ${game.border ? game.border + '22' : 'transparent'};" data-category="${game.category}" data-title="${game.title}">
+                        ${game.isTrending ? `<span class="game-badge" style="background: ${game.border || '#ff007f'};">🔥 TOP</span>` : ''}
+                        <div class="game-icon-box" style="background: ${game.color}; border: 1px dashed ${game.border};">
+                            ${iconOrImage}
+                        </div>
+                        <h3 class="game-title">${game.title}</h3>
+                        <div class="game-developer">👤 المطور: ${game.developer || 'مجهول'}</div>
+                        <div class="game-meta">
+                            <span class="rating-stars" onclick="rateGame(${game.id})">⭐ ${game.rating}/5</span>
+                            <span>📥 ${game.downloads} تحميل</span>
+                        </div>
+                        ${game.apkData ? `<button onclick="downloadApkFile(${game.id})" class="btn-download-apk">📥 تحميل ملف APK</button>` : ''}
+                    </div>
+                `;
+                gamesGrid.innerHTML += cardHTML;
+                if(game.isTrending) trendingGrid.innerHTML += cardHTML;
+            });
+        }
+
+        function filterGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const cards = document.querySelectorAll('.game-card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const cat = card.getAttribute('data-category');
+                card.style.display = ((title.includes(query)) && (category === 'all' || cat === category)) ? 'flex' : 'none';
+            });
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function submitGame(e) {
+            e.preventDefault();
+            const devName = document.getElementById('devName').value;
+            const title = document.getElementById('gameTitle').value;
+            const category = document.getElementById('gameCategory').value;
+            const htmlFileInput = document.getElementById('gameHtmlFile');
+            const imgFileInput = document.getElementById('gameImgFile');
+
+            if (htmlFileInput.files.length === 0) return;
+
+            const htmlFile = htmlFileInput.files[0];
+            const htmlReader = new FileReader();
+
+            htmlReader.onload = function(evt) {
+                const htmlContent = evt.target.result;
+
+                if (imgFileInput.files.length > 0) {
+                    const imgReader = new FileReader();
+                    imgReader.onload = function(imgEvt) {
+                        savePendingGame(devName, title, category, htmlContent, htmlFile.name, imgEvt.target.result);
+                    };
+                    imgReader.readAsDataURL(imgFileInput.files[0]);
+                } else {
+                    savePendingGame(devName, title, category, htmlContent, htmlFile.name, null);
+                }
+            };
+
+            htmlReader.readAsText(htmlFile);
+        }
+
+        function savePendingGame(devName, title, category, htmlContent, fileName, imgData) {
+            pendingGames.push({
+                id: Date.now(),
+                developer: devName,
+                title: title,
+                category: category,
+                htmlContent: htmlContent,
+                fileName: fileName,
+                imgData: imgData
+            });
+
+            localStorage.setItem('hassan_store_v11_pending', JSON.stringify(pendingGames));
+            alert('تم رفع اللعبة بنجاح وإرسالها للآدمن للمراجعة!');
+            closeModal('uploadModal');
+        }
+
+        function renderPendingList() {
+            const list = document.getElementById('pendingGamesList');
+            if (pendingGames.length === 0) {
+                list.innerHTML = 'لا توجد ألعاب قيد المراجعة حالياً.';
+                return;
+            }
+            list.innerHTML = '';
+            pendingGames.forEach((item, index) => {
+                list.innerHTML += `
+                    <div style="background:rgba(0,0,0,0.3); padding:12px; margin-bottom:12px; border-radius:10px; border:1px solid var(--glass-border);">
+                        <strong style="color:var(--primary-neon); font-size:15px;">${item.title}</strong><br>
+                        👤 <strong>المطور:</strong> ${item.developer}<br>
+                        📁 <strong>الملف الأصلي:</strong> ${item.fileName}<br>
+                        
+                        <div style="margin-top:8px;">
+                            <button style="background:var(--primary-neon); color:black; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold; margin-bottom:8px;" onclick="downloadHtmlFile(${index})">📥 معاينة ملف HTML</button>
+                            
+                            <div class="form-group" style="margin-top:5px;">
+                                <label style="color:#00f0ff;">🖼️ تغيير/رفع صورة للعبة (اختياري):</label>
+                                <input type="file" id="adminImgInput_${index}" accept="image/*" style="padding: 5px;">
+                            </div>
+
+                            <div class="form-group" style="margin-top:5px;">
+                                <label style="color:#00f0ff;">📦 اختر ملف APK للعبة من جهازك:</label>
+                                <input type="file" id="apkFileInput_${index}" accept=".apk" style="padding: 5px;">
+                            </div>
+                            
+                            <button style="background:#22c55e; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:bold; width:100%; margin-top:5px;" onclick="approveGameWithApkFile(${index})">✅ موافقة ونشر اللعبة باسم المطور (${item.developer})</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function downloadHtmlFile(index) {
+            const game = pendingGames[index];
+            const blob = new Blob([game.htmlContent], { type: "text/html" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = game.fileName || `${game.title}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function approveGameWithApkFile(index) {
+            const fileInput = document.getElementById(`apkFileInput_${index}`);
+            const adminImgInput = document.getElementById(`adminImgInput_${index}`);
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('يرجى اختيار ملف APK أولاً ونشره للعبة!');
+                return;
+            }
+
+            const apkFile = fileInput.files[0];
+            const apkReader = new FileReader();
+
+            apkReader.onload = function(evt) {
+                const apkData = evt.target.result;
+                const approved = pendingGames[index];
+
+                if (adminImgInput && adminImgInput.files.length > 0) {
+                    const imgReader = new FileReader();
+                    imgReader.onload = function(imgEvt) {
+                        finalizePublish(index, approved, apkData, apkFile.name, imgEvt.target.result);
+                    };
+                    imgReader.readAsDataURL(adminImgInput.files[0]);
+                } else {
+                    finalizePublish(index, approved, apkData, apkFile.name, approved.imgData);
+                }
+            };
+
+            apkReader.readAsDataURL(apkFile);
+        }
+
+        function finalizePublish(index, approved, apkData, apkFileName, imgData) {
+            pendingGames.splice(index, 1);
+            const randomTheme = customThemes[Math.floor(Math.random() * customThemes.length)];
+
+            games.push({
+                id: Date.now(),
+                developer: approved.developer,
+                title: approved.title,
+                category: approved.category,
+                htmlContent: approved.htmlContent,
+                apkData: apkData,
+                apkFileName: apkFileName,
+                imgData: imgData,
+                rating: 5,
+                downloads: 0,
+                isTrending: false,
+                icon: randomTheme.icon,
+                color: randomTheme.color,
+                border: randomTheme.border
+            });
+
+            localStorage.setItem('hassan_store_v11_games', JSON.stringify(games));
+            localStorage.setItem('hassan_store_v11_pending', JSON.stringify(pendingGames));
+            renderGames();
+            renderPendingList();
+            alert(`تم نشر اللعبة بنجاح مع ملف الـ APK والصورة باسم المطور: ${approved.developer}!`);
+        }
+
+        function downloadApkFile(id) {
+            const game = games.find(g => g.id === id);
+            if (game && game.apkData) {
+                game.downloads++;
+                localStorage.setItem('hassan_store_v11_games', JSON.stringify(games));
+                renderGames();
+
+                const a = document.createElement("a");
+                a.href = game.apkData;
+                a.download = game.apkFileName || `${game.title}.apk`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        function rateGame(id) {
+            const game = games.find(g => g.id === id);
+            if(game) {
+                game.rating = game.rating < 5 ? game.rating + 1 : 1;
+                localStorage.setItem('hassan_store_v11_games', JSON.stringify(games));
+                renderGames();
+            }
+        }
+    </script>
+</body>
+</html>
