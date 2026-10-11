@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسن ستور | Hassan Store Pro</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+        .glass { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body id="bodyTheme" class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass border border-cyan-500/50 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-cyan-400 text-lg"></i>
+        <span id="toastMsg" class="text-sm font-semibold"></span>
+    </div>
+
+    <!-- Store Force Update Modal -->
+    <div id="forceUpdateModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        <div class="glass max-w-md w-full p-8 rounded-3xl border border-cyan-500/50 text-center shadow-2xl space-y-4">
+            <div class="w-16 h-16 bg-cyan-500/20 text-cyan-400 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-2">
+                <i class="fa-solid fa-triangle-exclamation animate-bounce"></i>
+            </div>
+            <h2 class="text-2xl font-black text-cyan-400">تحديث إجباري متوفر!</h2>
+            <p class="text-sm text-slate-300">أصدر الأدمن نسخة جديدة للمتجر. يجب عليك تحميل التحديث الأخير للاستمرار.</p>
+            <div id="storeUpdateInfo" class="text-xs text-amber-400 font-bold bg-slate-900 p-2 rounded-xl border border-slate-800"></div>
+            <a id="storeDownloadLink" href="#" class="block w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-center shadow-lg shadow-cyan-500/30 transition">
+                <i class="fa-solid fa-download ml-2"></i> تحميل التحديث الجديد الآن
+            </a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="glass sticky top-0 z-50 border-b border-slate-800 px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="router('home')">
+                <div class="bg-cyan-500 text-slate-950 p-2.5 rounded-xl font-black text-xl shadow-lg shadow-cyan-500/50">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wider text-cyan-400">حسن ستور</h1>
+                    <p class="text-xs text-slate-400">Hassan Store Pro</p>
+                </div>
+            </div>
+
+            <div class="flex-1 max-w-md hidden md:flex items-center relative">
+                <i class="fa-solid fa-search absolute right-3.5 text-slate-400"></i>
+                <input type="text" id="searchInput" oninput="filterGames()" placeholder="ابحث عن ألعاب وتطبيقات APK..." 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-full py-2 pr-10 pl-4 text-sm focus:outline-none focus:border-cyan-500 transition">
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="router('support')" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-sm flex items-center gap-2 transition">
+                    <i class="fa-solid fa-headset text-cyan-400"></i>
+                    <span class="hidden sm:inline">الدعم الفني</span>
+                </button>
+
+                <button onclick="openModal('themeModal')" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-sm flex items-center gap-2 transition">
+                    <i class="fa-solid fa-palette text-cyan-400"></i>
+                    <span class="hidden sm:inline">الأنماط</span>
+                </button>
+
+                <button id="adminNavBtn" onclick="router('admin')" class="hidden bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/50 text-amber-400 px-3 py-2 rounded-xl text-sm flex items-center gap-2 transition">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>لوحة الأدمن</span>
+                </button>
+
+                <button onclick="openModal('uploadModal')" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/30 transition">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>رفع لعبة</span>
+                </button>
+
+                <div id="authArea">
+                    <button onclick="openModal('authModal')" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-2 rounded-xl text-sm font-semibold transition">تسجيل الدخول</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6" id="mainContent"></main>
+
+    <!-- Footer -->
+    <footer class="glass border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        <p>جميع الحقوق محفوظة © 2026 - حسن ستور (Hassan Store)</p>
+    </footer>
+
+    <!-- Modals -->
+    <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass max-w-md w-full p-6 rounded-2xl border border-slate-800 shadow-2xl relative">
+            <button onclick="closeModal('authModal')" class="absolute top-4 left-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h2 class="text-xl font-bold mb-4 text-cyan-400 flex items-center gap-2">
+                <i class="fa-solid fa-user-lock"></i> تسجيل الدخول (الأدمن: alaaraad990999@gmail.com)
+            </h2>
+            <form onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">البريد الإلكتروني</label>
+                    <input type="email" id="authEmail" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">كلمة المرور</label>
+                    <input type="password" id="authPass" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500">
+                </div>
+                <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20">تسجيل الدخول</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="uploadModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass max-w-lg w-full p-6 rounded-2xl border border-slate-800 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('uploadModal')" class="absolute top-4 left-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h2 class="text-xl font-bold mb-4 text-cyan-400 flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up"></i> رفع لعبة / تطبيق جديد (APK)
+            </h2>
+            <form onsubmit="handleUpload(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">اسم اللعبة / التطبيق</label>
+                    <input type="text" id="gameName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">اسم المطور الأصلي</label>
+                    <input type="text" id="gameDev" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">صورة الغلاف</label>
+                    <input type="file" id="gameImageFile" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-sm text-slate-400 file:ml-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-cyan-500 file:text-slate-950 file:font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">ملف اللعبة (APK)</label>
+                    <input type="file" id="gameApkFile" accept=".apk" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-sm text-slate-400 file:ml-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-amber-500 file:text-slate-950 file:font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">وصف مختصر</label>
+                    <textarea id="gameDesc" rows="3" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20">إرسال اللعبة للأدمن</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="updateGameModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass max-w-md w-full p-6 rounded-2xl border border-slate-800 shadow-2xl relative">
+            <button onclick="closeModal('updateGameModal')" class="absolute top-4 left-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h2 class="text-xl font-bold mb-4 text-amber-400 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> تحديث ملف اللعبة (HTML)
+            </h2>
+            <form onsubmit="handleGameUpdateSubmit(event)" class="space-y-4">
+                <input type="hidden" id="updateGameId">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">اختر ملف التحديث الجديد (HTML)</label>
+                    <input type="file" id="updatedHtmlFile" accept=".html" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-sm text-slate-400 file:ml-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-amber-500 file:text-slate-950 file:font-bold">
+                </div>
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2.5 rounded-xl transition shadow-lg shadow-amber-500/20">إرسال التحديث للمراجعة</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="themeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass max-w-sm w-full p-6 rounded-2xl border border-slate-800 shadow-2xl relative">
+            <button onclick="closeModal('themeModal')" class="absolute top-4 left-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h2 class="text-xl font-bold mb-4 text-cyan-400 flex items-center gap-2">
+                <i class="fa-solid fa-palette"></i> اختر نمط المتجر
+            </h2>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="setTheme('cyber')" class="bg-cyan-950 border border-cyan-500/50 hover:bg-cyan-900 p-3 rounded-xl text-center text-sm font-bold text-cyan-400 transition">🩵 نيون سيبر</button>
+                <button onclick="setTheme('emerald')" class="bg-emerald-950 border border-emerald-500/50 hover:bg-emerald-900 p-3 rounded-xl text-center text-sm font-bold text-emerald-400 transition">🟢 زمردي</button>
+                <button onclick="setTheme('purple')" class="bg-purple-950 border border-purple-500/50 hover:bg-purple-900 p-3 rounded-xl text-center text-sm font-bold text-purple-400 transition">🔮 ملكي</button>
+                <button onclick="setTheme('volcanic')" class="bg-red-950 border border-red-500/50 hover:bg-red-900 p-3 rounded-xl text-center text-sm font-bold text-red-400 transition">🔥 بركاني</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const ADMIN_EMAIL = "alaaraad990999@gmail.com";
+        const CURRENT_USER_CLIENT_VERSION = "1.0.0";
+
+        let db = JSON.parse(localStorage.getItem('hassanStore_support_db')) || {
+            currentUser: JSON.parse(localStorage.getItem('hassanStore_support_user')) || null,
+            storeUpdate: { version: "1.0.0", apk: "#" },
+            games: [
+                { id: 1, name: "لعبة القفز السيبراني", dev: "حسن آرا", devEmail: "alaaraad990999@gmail.com", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400", apk: "#", apkName: "game.apk", desc: "لعبة أكشن ممتعة وسريعة" }
+            ],
+            pending: [],
+            supportTickets: []
+        };
+
+        function saveDB() {
+            localStorage.setItem('hassanStore_support_db', JSON.stringify(db));
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMsg.innerText = msg;
+            if(type === 'success') {
+                toastIcon.className = "fa-solid fa-circle-check text-cyan-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-triangle-exclamation text-amber-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        let currentRoute = 'home';
+        function router(route) {
+            currentRoute = route;
+            render();
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            db.currentUser = { email: email };
+            localStorage.setItem('hassanStore_support_user', JSON.stringify(db.currentUser));
+            saveDB();
+            closeModal('authModal');
+            render();
+            showToast("تم تسجيل الدخول بنجاح!");
+        }
+
+        function logout() {
+            db.currentUser = null;
+            localStorage.removeItem('hassanStore_support_user');
+            saveDB();
+            router('home');
+            showToast("تم تسجيل الخروج بنجاح", "info");
+        }
+
+        function handleUpload(e) {
+            e.preventDefault();
+            if (!db.currentUser) {
+                showToast("يرجى تسجيل الدخول أولاً لرفع لعبة!", "info");
+                openModal('authModal');
+                return;
+            }
+
+            const name = document.getElementById('gameName').value;
+            const dev = document.getElementById('gameDev').value;
+            const desc = document.getElementById('gameDesc').value;
+            const imageFile = document.getElementById('gameImageFile').files[0];
+            const apkFile = document.getElementById('gameApkFile').files[0];
+
+            const readerImg = new FileReader();
+            readerImg.onload = function(imgEvent) {
+                const readerApk = new FileReader();
+                readerApk.onload = function(apkEvent) {
+                    const newGame = {
+                        id: Date.now(),
+                        name,
+                        dev,
+                        devEmail: db.currentUser.email,
+                        image: imgEvent.target.result,
+                        apk: apkEvent.target.result,
+                        apkName: apkFile.name,
+                        desc
+                    };
+
+                    db.pending.push(newGame);
+                    saveDB();
+                    closeModal('uploadModal');
+                    showToast("تم إرسال اللعبة للأدمن بنجاح وفي انتظار المراجعة والنشر!");
+                    if(currentRoute === 'admin') render();
+                };
+                readerApk.readAsDataURL(apkFile);
+            };
+            readerImg.readAsDataURL(imageFile);
+        }
+
+        function approveGame(id) {
+            const idx = db.pending.findIndex(g => g.id === id);
+            if (idx !== -1) {
+                const game = db.pending.splice(idx, 1)[0];
+                db.games.push(game);
+                saveDB();
+                render();
+                showToast("تمت الموافقة ونشر اللعبة بنجاح!");
+            }
+        }
+
+        function rejectGame(id) {
+            db.pending = db.pending.filter(g => g.id !== id);
+            saveDB();
+            render();
+            showToast("تم رفض اللعبة وحذفها!", "info");
+        }
+
+        function deleteGame(id) {
+            if(confirm("هل أنت متأكد من حذف هذه اللعبة نهائياً؟")) {
+                db.games = db.games.filter(g => g.id !== id);
+                saveDB();
+                render();
+                showToast("تم حذف اللعبة بنجاح!", "info");
+            }
+        }
+
+        function downloadFile(dataUrl, fileName) {
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = fileName || 'download';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast("جاري تحميل الملف...");
+        }
+
+        function handleStoreUpdateUpload(e) {
+            e.preventDefault();
+            const version = document.getElementById('newStoreVersion').value;
+            const file = document.getElementById('storeApkFile').files[0];
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                db.storeUpdate = { version: version, apk: evt.target.result };
+                saveDB();
+                showToast("تم تحديث إصدار المتجر بنجاح وإلزام المستخدمين بالتحديث!");
+                checkStoreVersion();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openUpdateGameModal(id) {
+            document.getElementById('updateGameId').value = id;
+            openModal('updateGameModal');
+        }
+
+        function handleGameUpdateSubmit(e) {
+            e.preventDefault();
+            const id = Number(document.getElementById('updateGameId').value);
+            const file = document.getElementById('updatedHtmlFile').files[0];
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const game = db.games.find(g => g.id === id) || db.pending.find(g => g.id === id);
+                if(game) {
+                    const updateRequest = {
+                        ...game,
+                        id: Date.now(),
+                        originalId: game.id,
+                        apk: evt.target.result,
+                        apkName: file.name,
+                        isUpdate: true
+                    };
+                    db.pending.push(updateRequest);
+                    saveDB();
+                    closeModal('updateGameModal');
+                    showToast("تم إرسال تحديث اللعبة للأدمن للمراجعة!");
+                    if(currentRoute === 'admin') render();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function submitSupportTicket(e) {
+            e.preventDefault();
+            const name = document.getElementById('ticketName').value;
+            const email = document.getElementById('ticketEmail').value;
+            const message = document.getElementById('ticketMsg').value;
+
+            db.supportTickets.push({
+                id: Date.now(),
+                name,
+                email,
+                message,
+                date: new Date().toLocaleDateString('ar-IQ')
+            });
+            saveDB();
+            document.getElementById('supportForm').reset();
+            showToast("تم إرسال رسالتك لدعم المتجر بنجاح!");
+        }
+
+        function deleteTicket(id) {
+            db.supportTickets = db.supportTickets.filter(t => t.id !== id);
+            saveDB();
+            render();
+            showToast("تم حذف رسالة الدعم بنجاح!", "info");
+        }
+
+        function checkStoreVersion() {
+            if (db.storeUpdate && db.storeUpdate.version && db.storeUpdate.version !== CURRENT_USER_CLIENT_VERSION) {
+                document.getElementById('storeUpdateInfo').innerText = `الإصدار المطلوب: ${db.storeUpdate.version} (إصدارك: ${CURRENT_USER_CLIENT_VERSION})`;
+                document.getElementById('storeDownloadLink').href = db.storeUpdate.apk;
+                document.getElementById('forceUpdateModal').classList.remove('hidden');
+            }
+        }
+
+        function setTheme(theme) {
+            const body = document.getElementById('bodyTheme');
+            if(theme === 'cyber') body.className = "bg-slate-950 text-slate-100 min-h-screen flex flex-col";
+            if(theme === 'emerald') body.className = "bg-emerald-950 text-emerald-100 min-h-screen flex flex-col";
+            if(theme === 'purple') body.className = "bg-purple-950 text-purple-100 min-h-screen flex flex-col";
+            if(theme === 'volcanic') body.className = "bg-red-950 text-red-100 min-h-screen flex flex-col";
+            closeModal('themeModal');
+            showToast("تم تغيير النمط بنجاح");
+        }
+
+        function render() {
+            const main = document.getElementById('mainContent');
+            const authArea = document.getElementById('authArea');
+            const adminNavBtn = document.getElementById('adminNavBtn');
+
+            const isAdmin = db.currentUser && db.currentUser.email === ADMIN_EMAIL;
+
+            if (isAdmin) {
+                adminNavBtn.classList.remove('hidden');
+            } else {
+                adminNavBtn.classList.add('hidden');
+                if(currentRoute === 'admin') currentRoute = 'home';
+            }
+
+            if (db.currentUser) {
+                authArea.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-cyan-400 font-semibold hidden sm:inline">${db.currentUser.email}</span>
+                        <button onclick="logout()" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 px-3 py-2 rounded-xl text-sm transition">خروج</button>
+                    </div>
+                `;
+            } else {
+                authArea.innerHTML = `
+                    <button onclick="openModal('authModal')" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-2 rounded-xl text-sm font-semibold transition">تسجيل الدخول</button>
+                `;
+            }
+
+            if (currentRoute === 'home') {
+                main.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        <div class="lg:col-span-1 space-y-4">
+                            <div class="glass rounded-3xl p-5 border border-cyan-500/30 shadow-xl">
+                                <h3 class="text-base font-bold text-cyan-400 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-bars-staggered"></i> الأقسام والتنقل
+                                </h3>
+                                <div class="space-y-2">
+                                    <button onclick="router('home')" class="w-full text-right bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 p-2.5 rounded-xl text-sm font-semibold transition flex items-center gap-2">
+                                        <i class="fa-solid fa-gamepad"></i> الألعاب والتطبيقات
+                                    </button>
+                                    <button onclick="router('support')" class="w-full text-right bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 p-2.5 rounded-xl text-sm font-semibold transition flex items-center gap-2">
+                                        <i class="fa-solid fa-headset"></i> الدعم الفني
+                                    </button>
+                                    ${isAdmin ? `
+                                        <button onclick="router('admin')" class="w-full text-right bg-amber-500/20 text-amber-300 border border-amber-500/40 p-2.5 rounded-xl text-sm font-semibold transition flex items-center gap-2">
+                                            <i class="fa-solid fa-shield-halved"></i> لوحة الأدمن
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            <div class="glass rounded-3xl p-5 border border-slate-800 shadow-xl">
+                                <h3 class="text-xs font-bold text-slate-300 mb-2"><i class="fa-solid fa-circle-info ml-1"></i> حول المتجر</h3>
+                                <p class="text-xs text-slate-400 leading-relaxed">منصة متكاملة ومؤمنة لرفع وتنزيل ملفات الـ APK وألعاب الويب مباشرة بكل سهولة وسرعة.</p>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-3 space-y-4">
+                            <div class="glass p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
+                                <h3 class="text-lg font-bold flex items-center gap-2 text-cyan-400">
+                                    <i class="fa-solid fa-store"></i> الألعاب المتاحة للتحميل
+                                </h3>
+                                <span class="text-xs bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg text-slate-400">العدد: ${db.games.length}</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="gamesGrid">
+                                ${db.games.map(game => {
+                                    const isOwner = db.currentUser && db.currentUser.email === game.devEmail;
+                                    return `
+                                        <div class="glass rounded-2xl overflow-hidden border border-slate-800 hover:border-cyan-500/50 transition flex flex-col justify-between group shadow-lg">
+                                            <div>
+                                                <div class="h-40 overflow-hidden relative">
+                                                    <img src="${game.image}" alt="${game.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                                    ${isOwner ? `
+                                                        <button onclick="openUpdateGameModal(${game.id})" title="تحديث ملف اللعبة" class="absolute top-3 left-3 bg-amber-500 text-slate-950 p-2 rounded-xl shadow-lg hover:bg-amber-400 transition">
+                                                            <i class="fa-solid fa-pen text-xs"></i>
+                                                        </button>
+                                                    ` : ''}
+                                                </div>
+                                                <div class="p-4">
+                                                    <h4 class="font-bold text-base mb-1 text-slate-100">${game.name}</h4>
+                                                    <p class="text-xs text-cyan-400 mb-1.5">المطور: ${game.dev}</p>
+                                                    <p class="text-xs text-slate-400 line-clamp-2">${game.desc}</p>
+                                                </div>
+                                            </div>
+                                            <div class="p-4 pt-0 flex items-center justify-between gap-2">
+                                                <a href="${game.apk}" download="${game.apkName || 'game.apk'}" class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2 px-3 rounded-xl text-center text-xs shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-1.5">
+                                                    <i class="fa-solid fa-download"></i> تحميل APK
+                                                </a>
+                                                ${isAdmin ? `<button onclick="deleteGame(${game.id})" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-xl border border-red-500/40 transition"><i class="fa-solid fa-trash text-xs"></i></button>` : ''}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentRoute === 'support') {
+                main.innerHTML = `
+                    <div class="max-w-2xl mx-auto glass p-6 md:p-8 rounded-3xl border border-cyan-500/30 shadow-2xl">
+                        <h2 class="text-2xl font-black text-cyan-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-headset"></i> مركز الدعم الفني
+                        </h2>
+                        <p class="text-xs text-slate-400 mb-6">واجهتك مشكلة معينة؟ تواصل معنا وسيتم الرد عليك في أقرب وقت ممكن.</p>
+                        <form id="supportForm" onsubmit="submitSupportTicket(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">اسمك الكريم</label>
+                                <input type="text" id="ticketName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">البريد الإلكتروني</label>
+                                <input type="email" id="ticketEmail" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">رسالتك أو مشكلتك</label>
+                                <textarea id="ticketMsg" rows="4" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-cyan-500"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-3 rounded-xl transition shadow-lg shadow-cyan-500/20">إرسال الرسالة للدعم</button>
+                        </form>
+                    </div>
+                `;
+            } else if (currentRoute === 'admin' && isAdmin) {
+                main.innerHTML = `
+                    <div class="mb-6 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-amber-400 flex items-center gap-2">
+                                <i class="fa-solid fa-shield-halved"></i> لوحة تحكم الأدمن الحصرية
+                            </h2>
+                            <p class="text-xs text-slate-400 mt-1">إدارة الألعاب، التحديثات الإجبارية، ورسائل الدعم الفني</p>
+                        </div>
+                        <button onclick="router('home')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm transition">العودة للمتجر</button>
+                    </div>
+
+                    <!-- قسم رفع تحديث المتجر الإجباري (APK) -->
+                    <div class="glass p-6 rounded-3xl border border-amber-500/30 mb-8 shadow-xl">
+                        <h3 class="text-lg font-bold text-amber-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> رفع تحديث المتجر الإجباري (APK)
+                        </h3>
+                                                <p class="text-xs text-slate-400 mb-4">قم برفع ملف الـ APK الخاص بالمتجر الجديد مع تحديد رقم الإصدار لفرض التحديث على جميع اللاعبين.</p>
+                        <form onsubmit="handleStoreUpdateUpload(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">رقم الإصدار الجديد (مثال: 2.0.0)</label>
+                                <input type="text" id="newStoreVersion" required placeholder="2.0.0" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">ملف تطبيق المتجر الجديد (APK)</label>
+                                <input type="file" id="storeApkFile" accept=".apk" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-1.5 text-xs text-slate-400 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-amber-500 file:text-slate-950 file:font-bold">
+                            </div>
+                            <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2.5 rounded-xl transition text-sm shadow-lg shadow-amber-500/20">اعتماد وإلزام التحديث</button>
+                        </form>
+                    </div>
+
+                    <!-- قائمة الألعاب المعلقة للمراجعة -->
+                    <div class="space-y-4 mb-8">
+                        <h3 class="text-lg font-bold text-slate-200">الألعاب والتحديثات بانتظار المراجعة (${db.pending.length})</h3>${db.pending.length === 0 ? `
+                            <div class="glass p-6 rounded-2xl text-center text-slate-500">لا توجد عناصر معلقة للمراجعة حالياً.</div>
+                        ` : `
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${db.pending.map(game => `
+                                    <div class="glass p-4 rounded-2xl border border-amber-500/30 flex gap-4 items-center">
+                                        <img src="${game.image}" class="w-20 h-20 object-cover rounded-xl border border-slate-700">
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-base text-slate-100">${game.name} ${game.isUpdate ? '<span class="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded">تحديث لعبة</span>' : ''}</h4>
+                                            <p class="text-xs text-cyan-400">المطور: ${game.dev}</p>
+                                            <div class="flex items-center gap-2 mt-3 flex-wrap">
+                                                <button onclick="approveGame(${game.id})" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition">موافقة ونشر ✅</button>
+                                                <button onclick="downloadFile('${game.apk}', '${game.apkName || 'game_file'}')" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition"><i class="fa-solid fa-download"></i> تنزيل الملف</button>
+                                                <button onclick="rejectGame(${game.id})" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-1.5 rounded-lg text-xs border border-red-500/30 transition">رفض ❌</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `}
+                    </div>
+
+                    <!-- صندوق رسائل الدعم الفني للأدمن -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold text-slate-200">رسائل الدعم الفني (${db.supportTickets.length})</h3>
+                        ${db.supportTickets.length === 0 ? `
+                            <div class="glass p-6 rounded-2xl text-center text-slate-500">لا توجد رسائل دعم فني واردة حالياً.</div>
+                        ` : `
+                            <div class="space-y-3">
+                                ${db.supportTickets.map(ticket => `
+                                    <div class="glass p-4 rounded-2xl border border-slate-700 flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+                                        <div>
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <h4 class="font-bold text-slate-100">${ticket.name}</h4>
+                                                <span class="text-xs text-cyan-400">(${ticket.email})</span>
+                                                <span class="text-xs text-slate-500">${ticket.date}</span>
+                                            </div>
+                                            <p class="text-xs text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-800">${ticket.message}</p>
+                                        </div>
+                                        <button onclick="deleteTicket(${ticket.id})" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-1.5 rounded-lg text-xs border border-red-500/30 transition">حذف الرسالة</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `}
+                    </div>
+                `;
+            }
+        }
+
+        function filterGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('#gamesGrid > div');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        render();
+        checkStoreVersion();
+    </script>
+</body>
+</html>
