@@ -8,12 +8,12 @@
     <style>
         :root {
             --bg-main: #050814;
-            --bg-card: rgba(15, 23, 42, 0.85);
+            --bg-card: rgba(15, 23, 42, 0.95);
             --primary-neon: #00f0ff;
             --secondary-neon: #ff007f;
             --text-main: #f1f5f9;
             --text-sub: #94a3b8;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
         }
 
         * {
@@ -31,7 +31,7 @@
         }
 
         header {
-            background: rgba(10, 15, 30, 0.9);
+            background: rgba(10, 15, 30, 0.95);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--glass-border);
             padding: 15px 25px;
@@ -77,7 +77,6 @@
             box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
-        /* بنر المتصفح العادي */
         .download-store-banner {
             background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), rgba(255, 0, 127, 0.15));
             border: 1px solid var(--primary-neon);
@@ -203,7 +202,6 @@
             z-index: 2;
         }
 
-        /* زر القلم للتحديث */
         .btn-edit-game {
             position: absolute;
             top: 12px;
@@ -254,8 +252,15 @@
         .game-developer {
             font-size: 12px;
             color: var(--primary-neon);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             font-weight: 700;
+        }
+
+        .game-desc {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
 
         .game-meta {
@@ -308,6 +313,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 15px;
         }
 
         .modal-box {
@@ -315,10 +321,10 @@
             border: 1px solid var(--primary-neon);
             border-radius: 20px;
             padding: 25px;
-            width: 90%;
+            width: 100%;
             max-width: 480px;
             box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
@@ -344,11 +350,11 @@
             transform: translateY(-2px);
         }
 
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 13px; color: var(--text-sub); }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-sub); font-weight: bold; }
         .form-group input, .form-group textarea, .form-group select {
-            width: 100%; padding: 10px; border-radius: 8px;
-            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); color: white; box-sizing: border-box;
+            width: 100%; padding: 12px; border-radius: 10px;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border); color: white; box-sizing: border-box; font-size: 14px;
         }
     </style>
 </head>
@@ -408,15 +414,15 @@
                 </div>
                 <div class="form-group">
                     <label>🖼️ تحديث صورة اللعبة (اختياري):</label>
-                    <input type="file" id="updateImgFile" accept="image/*" style="padding: 5px;">
+                    <input type="file" id="updateImgFile" accept="image/*">
                 </div>
                 <div class="form-group">
                     <label>📄 اختر ملف اللعبة المحدث (HTML):</label>
-                    <input type="file" id="updateHtmlFile" accept=".html" required style="padding: 5px;">
+                    <input type="file" id="updateHtmlFile" accept=".html,.htm" required>
                 </div>
-                <button type="submit" class="nav-btn" style="width:100%; background:#f59e0b; color:#000; border:none; padding:10px; font-weight:900;">إرسال التحديث للمراجعة</button>
+                <button type="submit" class="nav-btn" style="width:100%; background:#f59e0b; color:#000; border:none; padding:12px; font-weight:900;">إرسال التحديث للمراجعة</button>
             </form>
-            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:8px; cursor:pointer;" onclick="closeModal('updateGameModal')">إغلاق</button>
+            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:10px; cursor:pointer;" onclick="closeModal('updateGameModal')">إغلاق</button>
         </div>
     </div>
 
@@ -429,7 +435,7 @@
                     <label>البريد الإلكتروني للآدمن:</label>
                     <input type="email" id="adminEmailInput" required placeholder="ادخل الإيميل الخاص بالآدمن">
                 </div>
-                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; font-weight:900;">دخول للوحة التحكم</button>
+                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:12px; font-weight:900;">دخول للوحة التحكم</button>
             </form>
             <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:10px; cursor:pointer;" onclick="closeModal('adminLoginModal')">إغلاق</button>
         </div>
@@ -445,7 +451,7 @@
                 <div class="theme-card" style="border-color:#a855f7;" onclick="applyTheme('#a855f7', '#ec4899', '#0f0728')">🔮 ملكي</div>
                 <div class="theme-card" style="border-color:#f97316;" onclick="applyTheme('#f97316', '#ef4444', '#1c0a00')">🔥 بركاني</div>
             </div>
-            <button class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; margin-top:15px; font-weight:bold;" onclick="closeModal('themesModal')">إغلاق</button>
+            <button class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:12px; margin-top:15px; font-weight:bold;" onclick="closeModal('themesModal')">إغلاق</button>
         </div>
     </div>
 
@@ -456,11 +462,11 @@
             <form onsubmit="uploadStoreApkFile(event)">
                 <div class="form-group">
                     <label>اختر ملف الـ APK الخاص بالمتجر:</label>
-                    <input type="file" id="storeApkInput" accept=".apk" required style="padding: 5px;">
+                    <input type="file" id="storeApkInput" accept=".apk" required>
                 </div>
-                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; font-weight:900;">حفظ ونشر APK المتجر</button>
+                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:12px; font-weight:900;">حفظ ونشر APK المتجر</button>
             </form>
-            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:8px; cursor:pointer;" onclick="closeModal('storeApkModal')">إغلاق</button>
+            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:10px; cursor:pointer;" onclick="closeModal('storeApkModal')">إغلاق</button>
         </div>
     </div>
 
@@ -468,10 +474,10 @@
     <div id="onboardingModal" class="modal-overlay">
         <div class="modal-box">
             <h2 style="color:var(--primary-neon); margin-top:0;">🎓 دليل المبرمجين</h2>
-            <div style="background: rgba(255, 0, 127, 0.15); border: 1px solid var(--secondary-neon); padding: 10px; border-radius: 8px; color: #ff77a9; font-size: 12px; font-weight: bold; margin-bottom: 12px;">
-                ⚠️ قم ببرمجة لعبتك في ملف HTML باسم <code>index.html</code> ثم ارفعها عبر زر "رفع لعبة". ولتحديثها اضغط على زر القلم ✏️ فوق كارت اللعبة!
+            <div style="background: rgba(255, 0, 127, 0.15); border: 1px solid var(--secondary-neon); padding: 12px; border-radius: 10px; color: #ff77a9; font-size: 13px; font-weight: bold; margin-bottom: 12px; line-height: 1.5;">
+                ⚠️ قم ببرمجة لعبتك في ملف HTML ثم ارفعها عبر زر "رفع لعبة". ولتحديثها اضغط على زر القلم ✏️ فوق كارت اللعبة!
             </div>
-            <button class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px;" onclick="closeModal('onboardingModal')">إغلاق</button>
+            <button class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:12px;" onclick="closeModal('onboardingModal')">إغلاق</button>
         </div>
     </div>
 
@@ -480,16 +486,21 @@
         <div class="modal-box">
             <h2 style="color:var(--primary-neon); margin-top:0;">📤 رفع لعبة جديدة</h2>
             <form onsubmit="submitGame(event)">
-                <div class="form-group"><label>اسم المطور:</label><input type="text" id="devName" required></div>
-                <div class="form-group"><label>اسم اللعبة:</label><input type="text" id="gameTitle" required></div>
+                <div class="form-group"><label>اسم المطور:</label><input type="text" id="devName" required placeholder="اسمك أو اسم الفريق"></div>
+                <div class="form-group"><label>اسم اللعبة:</label><input type="text" id="gameTitle" required placeholder="عنوان اللعبة"></div>
+                <div class="form-group"><label>وصف مختصر:</label><textarea id="gameDesc" rows="2" placeholder="نبذة قصيرة عن اللعبة..."></textarea></div>
                 <div class="form-group"><label>التصنيف:</label>
-                    <select id="gameCategory"><option value="action">أكشن</option><option value="racing">سباقات</option><option value="puzzle">ألغاز</option></select>
+                    <select id="gameCategory">
+                        <option value="action">⚔️ أكشن</option>
+                        <option value="racing">🏎️ سباقات</option>
+                        <option value="puzzle">🧩 ألغاز</option>
+                    </select>
                 </div>
-                <div class="form-group"><label>🖼️ صورة اللعبة:</label><input type="file" id="gameImgFile" accept="image/*" style="padding: 5px;"></div>
-                <div class="form-group"><label>📄 ملف HTML:</label><input type="file" id="gameHtmlFile" accept=".html" required style="padding: 5px;"></div>
-                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:10px; font-weight:900;">إرسال للمراجعة</button>
+                <div class="form-group"><label>🖼️ صورة اللعبة:</label><input type="file" id="gameImgFile" accept="image/*"></div>
+                <div class="form-group"><label>📄 ملف HTML (اللعبة):</label><input type="file" id="gameHtmlFile" accept=".html,.htm" required></div>
+                <button type="submit" class="nav-btn" style="width:100%; background:var(--primary-neon); color:#000; border:none; padding:12px; font-weight:900;">إرسال للمراجعة</button>
             </form>
-            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:8px; cursor:pointer;" onclick="closeModal('uploadModal')">إغلاق</button>
+            <button style="background:transparent; border:none; color:var(--text-sub); width:100%; margin-top:10px; cursor:pointer;" onclick="closeModal('uploadModal')">إغلاق</button>
         </div>
     </div>
 
@@ -498,12 +509,12 @@
         <div class="modal-box">
             <h2 style="color:var(--primary-neon); margin-top:0;">🔑 لوحة الآدمن</h2>
             <div id="pendingGamesList" style="font-size: 13px; color: var(--text-sub);">جاري التحميل...</div>
-            <button class="nav-btn" style="width:100%; background:#ef4444; color:white; border:none; padding:10px; margin-top: 15px;" onclick="closeModal('adminModal')">إغلاق</button>
+            <button class="nav-btn" style="width:100%; background:#ef4444; color:white; border:none; padding:12px; margin-top: 15px;" onclick="closeModal('adminModal')">إغلاق</button>
         </div>
-        </div>
-        <script>
-        let games = JSON.parse(localStorage.getItem('hassan_store_v11_games')) || [];
-        let pendingGames = JSON.parse(localStorage.getItem('hassan_store_v11_pending')) || [];
+                </div>
+                        <script>
+        let games = JSON.parse(localStorage.getItem('hassan_store_v12_games')) || [];
+        let pendingGames = JSON.parse(localStorage.getItem('hassan_store_v12_pending')) || [];
         let isAdmin = localStorage.getItem('hassan_store_is_admin') === 'true';
         
         const customThemes = [
@@ -546,22 +557,21 @@
             }
         }
 
-        // فحص البيئة الشامل: يتعرف فوراً على تطبيق WebIntoApp وتطبيقات APK المثبتة ويفتح الألعاب
         function checkEnvironment() {
             const isAppWrapper = window.matchMedia('(display-mode: standalone)').matches || 
                                  window.navigator.standalone || 
                                  navigator.userAgent.includes('WebIntoApp') || 
-                                 /wv/.test(navigator.userAgent);
+                                 navigator.userAgent.indexOf('wv') !== -1 ||
+                                 document.referrer.includes('android-app://') ||
+                                 localStorage.getItem('hassan_store_opened_as_app') === 'true';
 
             const browserBanner = document.getElementById('browserOnlyBanner');
             const storeContent = document.getElementById('storeContentBody');
 
             if (isAppWrapper) {
-                // داخل تطبيق APK / WebIntoApp: إخفاء بنر التحميل وفتح المتجر والألعاب فوراً
                 if (browserBanner) browserBanner.style.display = 'none';
                 if (storeContent) storeContent.style.display = 'block';
             } else {
-                // داخل متصفح عادي: إظهار بنر التحميل فقط وإخفاء الألعاب
                 if (browserBanner) browserBanner.style.display = 'flex';
                 if (storeContent) storeContent.style.display = 'none';
             }
@@ -673,6 +683,7 @@
                         </div>
                         <h3 class="game-title">${game.title}</h3>
                         <div class="game-developer">👤 المطور: ${game.developer || 'مجهول'}</div>
+                        <div class="game-desc">${game.description || 'بدون وصف'}</div>
                         <div class="game-meta">
                             <span class="rating-stars" onclick="rateGame(${game.id})">⭐ ${game.rating}/5</span>
                             <span>📥 ${game.downloads} تحميل</span>
@@ -726,9 +737,9 @@
             if (htmlFileInput.files.length === 0) return;
 
             const htmlFile = htmlFileInput.files[0];
-            const htmlReader = new FileReader();
+            const reader = new FileReader();
 
-            htmlReader.onload = function(evt) {
+            reader.onload = function(evt) {
                 const htmlContent = evt.target.result;
 
                 if (imgFileInput.files.length > 0) {
@@ -741,7 +752,7 @@
                     saveUpdateToPending(targetGame, htmlContent, htmlFile.name, targetGame.imgData);
                 }
             };
-            htmlReader.readAsText(htmlFile);
+            reader.readAsText(htmlFile);
         }
 
         function saveUpdateToPending(targetGame, htmlContent, fileName, imgData) {
@@ -759,52 +770,58 @@
                 border: targetGame.border
             });
 
-            localStorage.setItem('hassan_store_v11_pending', JSON.stringify(pendingGames));
+            localStorage.setItem('hassan_store_v12_pending', JSON.stringify(pendingGames));
             alert('تم رفع التحديث بنجاح وإرساله للآدمن للمراجعة!');
             closeModal('updateGameModal');
         }
 
         function submitGame(e) {
             e.preventDefault();
-            const devName = document.getElementById('devName').value;
-            const title = document.getElementById('gameTitle').value;
+            const devName = document.getElementById('devName').value.trim();
+            const title = document.getElementById('gameTitle').value.trim();
+            const description = document.getElementById('gameDesc').value.trim();
             const category = document.getElementById('gameCategory').value;
             const htmlFileInput = document.getElementById('gameHtmlFile');
             const imgFileInput = document.getElementById('gameImgFile');
 
-            if (htmlFileInput.files.length === 0) return;
+            if (htmlFileInput.files.length === 0) {
+                alert('يرجى اختيار ملف HTML للعبة!');
+                return;
+            }
 
             const htmlFile = htmlFileInput.files[0];
             const htmlReader = new FileReader();
 
             htmlReader.onload = function(evt) {
                 const htmlContent = evt.target.result;
+
                 if (imgFileInput.files.length > 0) {
                     const imgReader = new FileReader();
                     imgReader.onload = function(imgEvt) {
-                        savePendingGame(devName, title, category, htmlContent, htmlFile.name, imgEvt.target.result);
+                        savePendingGame(devName, title, description, category, htmlContent, htmlFile.name, imgEvt.target.result);
                     };
                     imgReader.readAsDataURL(imgFileInput.files[0]);
                 } else {
-                    savePendingGame(devName, title, category, htmlContent, htmlFile.name, null);
+                    savePendingGame(devName, title, description, category, htmlContent, htmlFile.name, null);
                 }
             };
             htmlReader.readAsText(htmlFile);
         }
 
-        function savePendingGame(devName, title, category, htmlContent, fileName, imgData) {
+        function savePendingGame(devName, title, description, category, htmlContent, fileName, imgData) {
             pendingGames.push({
                 id: Date.now(),
                 isUpdate: false,
                 developer: devName,
                 title: title,
+                description: description,
                 category: category,
                 htmlContent: htmlContent,
                 fileName: fileName,
                 imgData: imgData
             });
 
-            localStorage.setItem('hassan_store_v11_pending', JSON.stringify(pendingGames));
+            localStorage.setItem('hassan_store_v12_pending', JSON.stringify(pendingGames));
             alert('تم رفع اللعبة بنجاح وإرسالها للآدمن للمراجعة!');
             closeModal('uploadModal');
         }
@@ -825,7 +842,7 @@
                         📁 <strong>الملف:</strong> ${item.fileName}<br>
                         
                         <div style="margin-top:8px;">
-                            <button style="background:var(--primary-neon); color:black; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold; margin-bottom:8px;" onclick="downloadHtmlFile(${index})">📥 معاينة ملف HTML</button>
+                            <button style="background:var(--primary-neon); color:black; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; margin-bottom:8px;" onclick="downloadHtmlFile(${index})">📥 معاينة ملف HTML</button>
                             
                             <div class="form-group" style="margin-top:5px;">
                                 <label style="color:#00f0ff;">📦 اختر ملف APK للعبة من جهازك (للإقرار):</label>
@@ -879,6 +896,7 @@
                         id: Date.now(),
                         developer: approved.developer,
                         title: approved.title,
+                        description: approved.description,
                         category: approved.category,
                         htmlContent: approved.htmlContent,
                         apkData: apkData,
@@ -893,8 +911,8 @@
                     });
                 }
 
-                localStorage.setItem('hassan_store_v11_games', JSON.stringify(games));
-                localStorage.setItem('hassan_store_v11_pending', JSON.stringify(pendingGames));
+                localStorage.setItem('hassan_store_v12_games', JSON.stringify(games));
+                localStorage.setItem('hassan_store_v12_pending', JSON.stringify(pendingGames));
                 renderGames();
                 renderPendingList();
                 alert('تم اعتماد النشر/التحديث بنجاح!');
@@ -906,7 +924,7 @@
             const game = games.find(g => g.id === id);
             if (game && game.apkData) {
                 game.downloads++;
-                localStorage.setItem('hassan_store_v11_games', JSON.stringify(games));
+                localStorage.setItem('hassan_store_v12_games', JSON.stringify(games));
                 renderGames();
 
                 const a = document.createElement("a");
@@ -921,12 +939,4 @@
         function rateGame(id) {
             const game = games.find(g => g.id === id);
             if(game) {
-                game.rating = game.rating < 5 ? game.rating + 1 : 1;
-                localStorage.setItem('hassan_store_v11_games', JSON.stringify(games));
-                renderGames();
-            }
-        }
-    </script>
-</body>
-    </html>
-    
+                game.rating = gam
