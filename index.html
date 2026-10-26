@@ -1,513 +1,698 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mimic Party - النسخة الاحترافية الكبرى</title>
-  <style>
-    :root {
-      --primary: #ff2a6d;
-      --secondary: #05d9e8;
-      --accent: #ffeb3b;
-      --dark-bg: #07060b;
-      --card-bg: rgba(16, 14, 26, 0.96);
-      --text-color: #fffffe;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--dark-bg);
-      background-image: radial-gradient(circle at 50% 30%, #1c1333 0%, #07060b 100%);
-      color: var(--text-color);
-      text-align: center;
-      padding: 5px;
-      margin: 0;
-      width: 100vw;
-      height: 100vh;
-      box-sizing: border-box;
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 2px solid rgba(5, 217, 232, 0.2);
-      border-radius: 18px;
-      padding: 15px 20px;
-      width: 98vw;
-      max-width: 980px;
-      margin: 5px auto;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.95);
-      box-sizing: border-box;
-    }
-
-    h2 { margin: 2px 0 8px 0; color: var(--secondary); font-size: 1.6rem; text-shadow: 0 0 10px rgba(5,217,232,0.5); }
-
-    .btn {
-      background: linear-gradient(135deg, var(--primary), #b71540);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 6px 0;
-      width: 100%;
-      font-size: 1rem;
-      box-shadow: 0 4px 15px rgba(255, 42, 109, 0.4);
-      transition: 0.2s;
-    }
-    .btn:active { transform: scale(0.97); }
-
-    input {
-      padding: 10px 15px;
-      width: 82%;
-      border-radius: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      background: rgba(10, 8, 18, 0.95);
-      color: white;
-      margin-bottom: 8px;
-      text-align: center;
-      font-size: 1rem;
-      outline: none;
-    }
-    input:focus { border-color: var(--secondary); }
-
-    .hidden { display: none; }
-    .box { background: rgba(12, 10, 20, 0.9); border: 2px dashed var(--secondary); padding: 10px; border-radius: 12px; margin-top: 8px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Quiz Odyssey v8.0 🌋 Elemental Themes & Custom Categories</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     
-    #statusMessage {
-      font-size: 0.9rem;
-      color: var(--accent);
-      font-weight: bold;
-      margin: 4px 0;
-      min-height: 20px;
-    }
-
-    .mic-status {
-      background: rgba(46, 125, 50, 0.35);
-      border: 1px solid #4caf50;
-      padding: 5px;
-      border-radius: 8px;
-      margin: 4px 0;
-      font-weight: bold;
-      font-size: 0.85rem;
-      color: #81c784;
-    }
-
-    .round-indicator {
-      background: linear-gradient(135deg, #7c4dff, #512da8);
-      color: #fff;
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      box-shadow: 0 0 10px rgba(124, 77, 255, 0.5);
-    }
-
-    /* شبكة اختيار الشخصيات */
-    .avatars-grid {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .avatar-option {
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 1.4rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .avatar-option.selected {
-      border-color: var(--primary);
-      background: rgba(255, 42, 109, 0.3);
-      transform: scale(1.08);
-    }
-
-    /* ساحة المعركة الأفقية */
-    .arena {
-      background: rgba(5, 4, 10, 0.95);
-      border: 2px solid rgba(5, 217, 232, 0.4);
-      border-radius: 14px;
-      height: 85px;
-      position: relative;
-      margin: 8px 0;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      padding: 0 15px;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
-    }
-    .mic-icon {
-      position: absolute;
-      right: 15px;
-      font-size: 1.6rem;
-      background: var(--primary);
-      padding: 6px 10px;
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--primary);
-      animation: pulseMic 1.5s infinite;
-    }
-    @keyframes pulseMic {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); box-shadow: 0 0 20px var(--accent); }
-      100% { transform: scale(1); }
-    }
-
-    .avatar-player {
-      position: absolute;
-      left: 10px;
-      transition: left 2s cubic-bezier(0.4, 0, 0.2, 1);
-      background: rgba(30, 25, 50, 0.95);
-      padding: 4px 10px;
-      border-radius: 15px;
-      font-size: 0.8rem;
-      border: 2px solid var(--secondary);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
-    }
-
-    /* لوحة التحديات التلقائية (تيكتوك + كيك) */
-    .auto-panel {
-      background: rgba(255, 42, 109, 0.1);
-      border: 1px solid var(--primary);
-      padding: 10px;
-      border-radius: 12px;
-      margin-top: 8px;
-    }
-  </style>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
-</head>
-<body>
-
-  <div class="card">
-    <h2>🔥 MIMIC PARTY - PRO EDITION 🔥</h2>
-    <div id="statusMessage"></div>
-
-    <!-- 1. شاشة تسجيل الدخول -->
-    <div id="loginScreen">
-      <h3 style="margin: 4px 0 8px 0; font-size: 1rem; color: #a7a9be;">اختر شخصيتك واكتب اسمك لدخول الحفلة</h3>
-      <input type="text" id="playerNameInput" placeholder="اسمك المستعار...">
-      
-      <div class="avatars-grid">
-        <div class="avatar-option selected" onclick="selectAvatar('😎', this)">😎</div>
-        <div class="avatar-option" onclick="selectAvatar('🦊', this)">🦊</div>
-        <div class="avatar-option" onclick="selectAvatar('🤖', this)">🤖</div>
-        <div class="avatar-option" onclick="selectAvatar('🐱', this)">🐱</div>
-        <div class="avatar-option" onclick="selectAvatar('👑', this)">👑</div>
-      </div>
-
-      <button class="btn" onclick="loginAndRequestMic()">دخول الحفلة وفتح المايك 🎙️🚀</button>
-    </div>
-
-    <!-- 2. القائمة الرئيسية (اللوبي) -->
-    <div id="lobbyScreen" class="hidden">
-      <h3 id="welcomeUser" style="margin: 6px 0; color: var(--secondary);">أهلاً بك</h3>
-      <button class="btn" style="background: linear-gradient(135deg, #00b0ff, #00e676);" onclick="createRoom()">🏠 إنشاء روم جديدة (أدمن)</button>
-      
-      <div class="box">
-        <h3 style="margin: 4px 0; font-size: 0.95rem; color: var(--text-color);">🔍 انضمام للروم</h3>
-        <input type="text" id="roomCodeInput" placeholder="أدخل كود الروم (4 أرقام)...">
-        <button class="btn" style="background: linear-gradient(135deg, #7c4dff, #b388ff);" onclick="searchAndJoinRoom()">بحث وانضمام 🚪</button>
-      </div>
-    </div>
-
-    <!-- 3. شاشة اللعب والساحة -->
-    <div id="roomScreen" class="hidden">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <h3 id="roomTitle" style="margin: 0; color: var(--secondary); font-size: 1rem;">🚪 الغرفة: ...</h3>
-        <div class="round-indicator" id="roundIndicator">الجولة: 1 / 6</div>
-      </div>
-
-      <div class="mic-status">🎙️ المحادثة الصوتية متصلة وجاهزة للجميع</div>
-
-      <div class="arena" id="arenaBox">
-        <div class="mic-icon">🎤</div>
-      </div>
-
-      <p id="playersList" style="background: rgba(12, 10, 20, 0.85); padding: 5px; border-radius: 8px; font-size: 0.85rem; margin: 4px 0;">اللاعبون: جاري التحميل...</p>
-      
-      <!-- لوحة الأدمن لتوليد أصوات تيك توك والكيك تلقائياً -->
-      <div id="adminPanel" class="box auto-panel" style="display: none;">
-        <h3 style="margin: 2px 0; font-size: 0.9rem; color: var(--accent);">👑 لوحة تحكم الأدمن (توليد ذكي)</h3>
-        <p style="font-size: 0.75rem; margin: 2px 0; color: #ccc;">اختر تحدي الجولة (مزيج 4 ثوانٍ من ترندات تيك توك/يوتيوب + كيك حماسي):</p>
-        <button class="btn" style="padding: 8px; background: linear-gradient(135deg, #ff9100, #ff3d00);" onclick="triggerAutoChallenge()">⚡ اختيار وتوليد تحدي تلقائي (4 ثوانٍ)</button>
-      </div>
-
-      <h3 id="challengeText" style="font-size: 0.95rem; margin: 6px 0; color: var(--accent);">بانتظار بدء الأدمن للتحدي التلقائي...</h3>
-      <audio id="challengeAudio" style="display:none;"></audio>
-
-      <!-- عجلة الحظ الكبرى (نهاية الجولات الـ 6) -->
-      <div id="wheelSection" class="box" style="border-color: var(--primary); margin-top: 6px; display: none;">
-        <h3 style="margin: 3px 0; font-size: 0.95rem; color: var(--primary);">🎡 عجلة الحظ الكبرى (نهاية الـ 6 جولات)</h3>
-        <button class="btn" style="background: linear-gradient(135deg, #ab47bc, #7b1fa2); padding: 6px;" onclick="spinWheel()">دوران العجلة الكبرى 🎯</button>
-        <div id="wheelResult" style="font-size: 0.9rem; color: var(--accent);">اضغط لاكتشاف مصير الختام ونقاط الفريق!</div>
-      </div>
-    </div>
-  </div>
-
-  <audio id="remoteAudio" autoplay style="display:none;"></audio>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDMVsgQ0PKtsLKtnSdQvCMcSvAId-4P7C80",
-      authDomain: "mimic-party-95b12.firebaseapp.com",
-      databaseURL: "https://mimic-party-95b12-default-rtdb.firebaseio.com",
-      projectId: "mimic-party-95b12",
-      storageBucket: "mimic-party-95b12.appspot.com",
-      messagingSenderId: "779715969188",
-      appId: "1:779715969188:web:51a10385234be6bbbe631"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-
-    let currentUser = null;
-    let currentRoomId = null;
-    let isUserAdmin = false;
-    let localStream = null;
-    let peer = null;
-    let selectedAvatarEmoji = '😎';
-    let currentRound = 1;
-
-    // مكتبة ذكية مدمجة لمقاطع تيك توك ويوتيوب (4 ثوانٍ) مدمجة مع دقات كيك وأغاني ترند
-    const smartChallenges = [
-      { name: "🎬 ترند تيك توك: (إيش اللي صار؟) + دقة كيك حماسي 🥁", tone: "https://www.myinstants.com/media/sounds/whatsapp-iphone.mp3" },
-      { name: "🔥 ترند يوتيوب: (ضحكة الميّم المعروفة) + ريمكس عراقي 🎶", tone: "https://www.myinstants.com/media/sounds/erro.mp3" },
-      { name: "⚡ مقطع تيك توك: (صرخة الإنجاز) + إيقاع طبلة وكيك 🪘", tone: "https://www.myinstants.com/media/sounds/vine-boom.mp3" },
-      { name: "🎯 ترند حفلات: (هوسة سريعة) + دقة DJ عراقية 🎵", tone: "https://www.myinstants.com/media/sounds/air-horn.mp3" },
-      { name: "💥 مقطع كوميدي: (صوت الغلط BEEP) + إيقاع كيك صاخب 🥁", tone: "https://www.myinstants.com/media/sounds/buzzer.mp3" },
-      { name: "👑 ترند أسطوري: (تفاعل الملوك) + ريمكس حفلة 🎧", tone: "https://www.myinstants.com/media/sounds/bell.mp3" }
-    ];
-
-    function showStatus(msg) {
-      document.getElementById("statusMessage").innerText = msg;
-    }
-
-    function selectAvatar(emoji, element) {
-      document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
-      element.classList.add('selected');
-      selectedAvatarEmoji = emoji;
-    }
-
-    async function loginAndRequestMic() {
-      const name = document.getElementById("playerNameInput").value.trim();
-      if (!name) {
-        showStatus("⚠️ يرجى كتابة اسمك أولاً!");
-        return;
-      }
-
-      showStatus("جاري الاتصال...");
-      try {
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      } catch (err) {}
-
-      const fakeUid = 'user_' + Math.random().toString(36).substring(2, 9);
-      currentUser = { uid: fakeUid, name: name, avatar: selectedAvatarEmoji };
-      
-      try {
-        peer = new Peer(currentUser.uid);
-        peer.on('call', (call) => {
-          call.answer(localStream);
-          call.on('stream', (remoteStream) => {
-            const remoteAudio = document.getElementById("remoteAudio");
-            remoteAudio.srcObject = remoteStream;
-            remoteAudio.play();
-          });
-        });
-      } catch(e) {}
-
-      document.getElementById("loginScreen").classList.add("hidden");
-      document.getElementById("lobbyScreen").classList.remove("hidden");
-      document.getElementById("welcomeUser").innerText = "أهلاً بك، " + selectedAvatarEmoji + " " + name + " 👋";
-      showStatus("");
-    }
-
-    function createRoom() {
-      const roomId = Math.floor(1000 + Math.random() * 9000).toString();
-      currentRoomId = roomId;
-      isUserAdmin = true;
-
-      showStatus("جاري فتح الروم...");
-      db.ref('rooms/' + roomId).set({
-        host: currentUser.uid,
-        round: 1,
-        players: { 
-          [currentUser.uid]: { name: currentUser.name, avatar: currentUser.avatar } 
-        }
-      });
-
-      setTimeout(() => {
-        enterRoomView(roomId);
-      }, 300);
-    }
-
-    function searchAndJoinRoom() {
-      const roomId = document.getElementById("roomCodeInput").value.trim();
-      if (!roomId) {
-        showStatus("⚠️ أدخل كود الروم أولاً!");
-        return;
-      }
-
-      showStatus("جاري الدخول للروم...");
-      db.ref('rooms/' + roomId).once('value', (snapshot) => {
-        currentRoomId = roomId;
-        db.ref('rooms/' + roomId + '/players/' + currentUser.uid).set({
-          name: currentUser.name,
-          avatar: currentUser.avatar
-        });
-
-        if (snapshot.exists() && snapshot.val().players) {
-          snapshot.child('players').forEach((childSnapshot) => {
-            const peerId = childSnapshot.key;
-            if (peerId !== currentUser.uid) {
-              connectToPeer(peerId);
-            }
-          });
-        }
-        enterRoomView(roomId);
-      });
-    }
-
-    function connectToPeer(otherPeerId) {
-      if (!peer || !localStream) return;
-      try {
-        const call = peer.call(otherPeerId, localStream);
-        if (call) {
-          call.on('stream', (remoteStream) => {
-            const remoteAudio = document.getElementById("remoteAudio");
-            remoteAudio.srcObject = remoteStream;
-            remoteAudio.play();
-          });
-        }
-      } catch(e) {}
-    }
-
-    function enterRoomView(roomId) {
-      document.getElementById("lobbyScreen").classList.add("hidden");
-      document.getElementById("roomScreen").classList.remove("hidden");
-      document.getElementById("roomTitle").innerText = "🚪 الغرفة: " + roomId;
-      showStatus("");
-
-      if (isUserAdmin) {
-        document.getElementById("adminPanel").style.display = "block";
-      }
-
-      db.ref('rooms/' + roomId + '/round').on('value', (snapshot) => {
-        if (snapshot.exists()) {
-          currentRound = snapshot.val();
-          if (currentRound <= 6) {
-            document.getElementById("roundIndicator").innerText = "الجولة: " + currentRound + " / 6";
-            document.getElementById("wheelSection").style.display = "none";
-          } else {
-            document.getElementById("roundIndicator").innerText = "🏆 المرحلة الختامية";
-            document.getElementById("wheelSection").style.display = "block";
-          }
-        }
-      });
-
-      db.ref('rooms/' + roomId + '/players').on('value', (snapshot) => {
-        const players = snapshot.val();
-        if (!players) return;
-        let names = [];
-        const arena = document.getElementById("arenaBox");
-        arena.innerHTML = '<div class="mic-icon">🎤</div>';
-
-        let index = 0;
-        for (let id in players) {
-          const p = players[id];
-          const pName = typeof p === 'object' ? p.name : p;
-          const pAvatar = typeof p === 'object' ? p.avatar : '👤';
-          
-          names.push(pAvatar + " " + pName);
-
-          const avatarEl = document.createElement("div");
-          avatarEl.className = "avatar-player";
-          avatarEl.style.top = (6 + (index * 20)) + "px";
-          avatarEl.style.left = "10px"; 
-          avatarEl.innerHTML = pAvatar + " " + pName;
-          arena.appendChild(avatarEl);
-          index++;
-
-          if (id !== currentUser.uid) {
-            connectToPeer(id);
-          }
-        }
-        document.getElementById("playersList").innerText = "👥 المتصلون: " + names.join(" ، ");
-      });
-
-      // استقبال وتوليد التحدي التلقائي (4 ثوانٍ)
-      db.ref('rooms/' + roomId + '/currentChallenge').on('value', (snapshot) => {
-        const challenge = snapshot.val();
-        if (!challenge) return;
-
-        const allAvatars = document.querySelectorAll('.avatar-player');
-        allAvatars.forEach(av => {
-          av.style.left = "62%"; 
-        });
-
-        setTimeout(() => {
-          document.getElementById("challengeText").innerText = "🎙️ تحدي (4 ثوانٍ): " + challenge.name;
-          const audio = document.getElementById("challengeAudio");
-          audio.src = challenge.tone;
-          audio.play();
-
-          // تشغيل لمدة 4 ثوانٍ فقط بدقة عالية
-          setTimeout(() => {
-            audio.pause();
-            audio.currentTime = 0;
-          }, 4000);
-        }, 1500);
-      });
-    }
-
-    // الأدمن يختار تحدي تلقائي عشوائي من ترندات تيك توك/يوتيوب مع الكيك
-    function triggerAutoChallenge() {
-      const randomIndex = Math.floor(Math.random() * smartChallenges.length);
-      const chosenChallenge = smartChallenges[randomIndex];
-      let nextRound = currentRound + 1;
-
-      db.ref('rooms/' + currentRoomId).update({
-        round: nextRound > 7 ? 7 : nextRound,
-        currentChallenge: chosenChallenge
-      });
-
-      showStatus("⚡ تم توليد تحدي (4 ثوانٍ) بنجاح للجميع!");
-    }
-
-    const wheelOptions = [
-      "🔥 تخريب كلي: قلد مقطع التيك توك وأنت مغمض عيونك!",
-      "⭐ بونس أسطوري: نقاط الفريق مضاعفة (x3)!",
-      "🤫 تخريب صامت: قلد الدقة بدون استخدام يديك!",
-      "🛡️ درع حماية: إعفاء كامل من عقوبة الحفلة!",
-      "🤪 تخريب مجنون: قلد الصوت بصوت شخصية كرتونية!",
-      "💧 تحدي الهامس: قلد الترند همساً بدون إزعاج الجيران!"
-    ];
-
-    function spinWheel() {
-      const res = document.getElementById("wheelResult");
-      let count = 0;
-      const interval = setInterval(() => {
-        res.innerText = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
-        count++;
-        if (count > 12) {
-          clearInterval(interval);
-          const final = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
-          res.innerText = "🎯 النتيجة الختامية: " + final;
-        }
-      }, 60);
-    }
-  </script>
-</body>
-    </html>
+    <style>
+        :root {
+            --bg-void: #020208;
+            --bg-card: rgba(10, 10, 26, 0.94);
             
+            --primary-glow: #ff4500;
+            --secondary-glow: #00f3ff;
+            --accent-glow: #39ff14;
+            --ghost-white: #f5f0ff;
+            --border-glow: rgba(255, 69, 0, 0.45);
+            --font-main: 'Tajawal', sans-serif;
+        }
+
+        body[dir="ltr"] {
+            --font-main: 'Orbitron', 'Tajawal', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--ghost-white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 12px;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 0.5s ease;
+        }
+
+        #effects-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                linear-gradient(rgba(255, 69, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 38px 38px;
+        }
+
+        /* Container Card */
+        .app-window {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 920px;
+            background: var(--bg-card);
+            backdrop-filter: blur(25px);
+            border: 2px solid var(--border-glow);
+            border-radius: 32px;
+            padding: 36px 28px;
+            box-shadow: 0 0 50px var(--border-glow);
+            transition: all 0.4s ease;
+        }
+
+        /* Theme Modes styling */
+        .theme-lava { --primary-glow: #ff4500; --secondary-glow: #ff8c00; --border-glow: rgba(255, 69, 0, 0.6); }
+        .theme-water { --primary-glow: #0077ff; --secondary-glow: #00f3ff; --border-glow: rgba(0, 243, 255, 0.6); }
+        .theme-cyber { --primary-glow: #8800ff; --secondary-glow: #ff00ab; --border-glow: rgba(136, 0, 255, 0.6); }
+        .theme-matrix { --primary-glow: #39ff14; --secondary-glow: #00ff88; --border-glow: rgba(57, 255, 20, 0.6); }
+
+        .lang-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid var(--primary-glow);
+            color: var(--ghost-white);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary-glow);
+            color: #fff;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .header-box { text-align: center; margin-bottom: 24px; }
+        .glow-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-glow) 0%, var(--secondary-glow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .subtitle { color: var(--secondary-glow); font-size: 0.95rem; font-weight: 600; }
+
+        .section-label {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--secondary-glow);
+            margin: 18px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .mode-tile {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .mode-tile:hover, .mode-tile.active {
+            border-color: var(--secondary-glow);
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .mode-tile .icon { font-size: 1.6rem; margin-bottom: 4px; }
+        .mode-tile .name { font-weight: 800; font-size: 0.85rem; }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-bottom: 20px;
+        }
+
+        .category-grid::-webkit-scrollbar { width: 6px; }
+        .category-grid::-webkit-scrollbar-thumb { background: var(--primary-glow); border-radius: 10px; }
+
+        .cat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 10px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .cat-card:hover, .cat-card.active {
+            border-color: var(--primary-glow);
+            background: rgba(255, 69, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .cat-card .icon { font-size: 1.3rem; }
+        .cat-card span { font-size: 0.78rem; font-weight: 700; }
+
+        .btn-action {
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: linear-gradient(135deg, var(--primary-glow) 0%, var(--secondary-glow) 100%);
+            color: #fff;
+            box-shadow: 0 8px 25px var(--border-glow);
+        }
+
+        .btn-action:hover { transform: translateY(-3px); }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--secondary-glow);
+            margin-top: 10px;
+        }
+
+        .hud-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hud-badge {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--secondary-glow);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 14px;
+            border-radius: 18px;
+            border: 1px solid var(--secondary-glow);
+        }
+
+        .timer-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timer-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-glow), var(--secondary-glow), var(--primary-glow));
+            transition: width 1s linear;
+        }
+
+        .lifelines-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .lifeline-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid var(--primary-glow);
+            color: var(--ghost-white);
+            padding: 10px 6px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lifeline-btn:hover:not(:disabled) { background: var(--primary-glow); color: #fff; }
+        .lifeline-btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: #555; }
+
+        .question-box {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 22px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .opt-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 16px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .opt-card:hover:not(.disabled) {
+            border-color: var(--secondary-glow);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .opt-card.correct { background: rgba(0, 243, 255, 0.3) !important; border-color: var(--secondary-glow) !important; }
+        .opt-card.wrong { background: rgba(255, 69, 0, 0.3) !important; border-color: var(--primary-glow) !important; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+            margin: 24px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--primary-glow);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card .val { font-size: 2.2rem; font-weight: 900; color: var(--secondary-glow); }
+        .stat-card .lbl { font-size: 0.85rem; color: var(--primary-glow); font-weight: 700; }
+
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.35s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="theme-lava">
+
+    <div class="cyber-grid"></div>
+    <canvas id="effects-canvas"></canvas>
+
+    <div class="app-window" id="app-card">
+        
+        <div class="lang-bar">
+            <button class="lang-btn active" onclick="setLanguage('ar')">العربية</button>
+            <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        </div>
+
+        <!-- HOME SCREEN -->
+        <div id="screen-home" class="screen active">
+            <div class="header-box">
+                <h1 class="glow-title" id="txt-title">Super Quiz Odyssey v8.0 🌋</h1>
+                <p class="subtitle" id="txt-subtitle">تطوير شامل بأسئلة مخصصة لكل فئة وأطوار ألوان ديناميكية</p>
+            </div>
+
+            <div class="section-label" id="lbl-themes">🎨 اختر طور الثيم والبصريات</div>
+            <div class="modes-grid">
+                <div class="mode-tile active" onclick="setTheme('lava', this)"><div class="icon">🌋</div><div class="name">لافا البركان</div></div>
+                <div class="mode-tile" onclick="setTheme('water', this)"><div class="icon">🌊</div><div class="name">عمق المحيط</div></div>
+                <div class="mode-tile" onclick="setTheme('cyber', this)"><div class="icon">🔮</div><div class="name">سايبر نيون</div></div>
+                <div class="mode-tile" onclick="setTheme('matrix', this)"><div class="icon">💻</div><div class="name">ماتريكس أخضر</div></div>
+            </div>
+
+            <div class="section-label" id="lbl-categories">📚 اختر الفئة المطلوبة</div>
+            <div class="category-grid" id="category-selector"></div>
+
+            <button class="btn-action" id="btn-start" onclick="startGame()">⚡ انطلاق للتحدي</button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="screen-quiz" class="screen">
+            <div class="hud-bar">
+                <div id="hud-cat" class="hud-badge">الفئة</div>
+                <div class="hud-badge" id="hud-progress">السؤال 1 / 10</div>
+                <div class="hud-badge" id="hud-score">🏆 النقاط: 0</div>
+            </div>
+
+            <div class="timer-track"><div id="timer-bar" class="timer-fill"></div></div>
+
+            <div class="lifelines-row">
+                <button id="life-5050" class="lifeline-btn" onclick="trigger5050()">🧹 حذف إجابتين</button>
+                <button id="life-freeze" class="lifeline-btn" onclick="triggerFreeze()">⏱️ وقت إضافي</button>
+                <button id="life-skip" class="lifeline-btn" onclick="triggerSkip()">⏭️ تخطي السؤال</button>
+            </div>
+
+            <div class="question-box"><div id="question-text" class="question-text">جاري التحميل...</div></div>
+            <div id="options-container" class="options-list"></div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="screen-end" class="screen">
+            <div class="header-box">
+                <h1 class="glow-title" id="txt-end-title">نتائج التحدي 🔥</h1>
+                <p class="subtitle" id="txt-end-sub">تحليل الأداء النهائي</p>
+            </div>
+
+            <div class="stats-grid" id="end-stats-grid"></div>
+
+            <button class="btn-action" id="btn-restart" onclick="startGame()">🔄 شوط جديد</button>
+            <button class="btn-action btn-secondary" id="btn-home" onclick="navScreen('screen-home')">🏠 القائمة الرئيسية</button>
+        </div>
+
+    </div>
+
+    <script>
+        const i18n = {
+            ar: {
+                title: "Super Quiz Odyssey v8.0 🌋",
+                subtitle: "تطوير شامل بأسئلة مخصصة لكل فئة وأطوار ألوان ديناميكية",
+                themesLbl: "🎨 اختر طور الثيم والبصريات",
+                categoriesLbl: "📚 اختر الفئة المطلوبة",
+                startBtn: "⚡ انطلاق للتحدي",
+                restartBtn: "🔄 شوط جديد",
+                homeBtn: "🏠 القائمة الرئيسية",
+                endTitle: "نتائج التحدي 🔥",
+                endSub: "تحليل الأداء النهائي",
+                totalScore: "مجموع النقاط",
+                accuracy: "نسبة الدقة"
+            },
+            en: {
+                title: "Super Quiz Odyssey v8.0 🌋",
+                subtitle: "Custom Category Questions & Dynamic Theme Modes",
+                themesLbl: "🎨 Select Theme & Visual Mode",
+                categoriesLbl: "📚 Choose Quiz Category",
+                startBtn: "⚡ Launch Challenge",
+                restartBtn: "🔄 Play Again",
+                homeBtn: "🏠 Main Menu",
+                endTitle: "Challenge Results 🔥",
+                endSub: "Performance Breakdown",
+                totalScore: "Total Score",
+                accuracy: "Accuracy Rate"
+            }
+        };
+
+        /* فئات مخصصة مع بنك أسئلة حقيقي لكل فئة على حدة */
+        const categoriesData = [
+            { id: "space", icon: "🚀", title: { ar: "الفضاء والكون", en: "Space & Astronomy" }, questions: [
+                { q: { ar: "ما هو أكبر كوكب في المجموعة الشمسية؟", en: "What is the largest planet in our solar system?" }, options: ["المشتري", "زحل", "المريخ", "الأسترويد"], ans: "المشتري" },
+                { q: { ar: "ما اسم المجرة التي ينتمي إليها كوكب الأرض؟", en: "What is the name of Earth's galaxy?" }, options: ["درب التبانة", "أندروميدا", "سومبريرو", "الماجلان"], ans: "درب التبانة" },
+                { q: { ar: "أقرب كوكب إلى الشمس هو؟", en: "Closest planet to the sun?" }, options: ["عطارد", "الزهرة", "المريخ", "الأرض"], ans: "عطارد" },
+                { q: { ar: "ما هو الكوكب الأحمر؟", en: "What is the Red Planet?" }, options: ["المريخ", "المشتري", "زحل", "عطارد"], ans: "المريخ" }
+            ]},
+            { id: "chemistry", icon: "🧪", title: { ar: "الكيمياء والعناصر", en: "Chemistry & Elements" }, questions: [
+                { q: { ar: "ما هو الرمز الكيميائي لعنصر الذهب؟", en: "Chemical symbol for Gold?" }, options: ["Au", "Ag", "Fe", "Cu"], ans: "Au" },
+                { q: { ar: "ما الغاز الأكثر وفراً في الغلاف الجوي للأرض؟", en: "Most abundant gas in Earth's atmosphere?" }, options: ["النيتروجين", "الأكسجين", "ثاني أكسيد الكربون", "الهيدروجين"], ans: "النيتروجين" },
+                { q: { ar: "ما هو الرمز الكيميائي للماء؟", en: "Chemical formula for water?" }, options: ["H2O", "CO2", "NaCl", "O2"], ans: "H2O" },
+                { q: { ar: "ما هو العنصر الأكثر خفة في الجدول الدوري؟", en: "Lightest element in periodic table?" }, options: ["الهيدروجين", "الهيليوم", "الليثيوم", "الكربون"], ans: "الهيدروجين" }
+            ]},
+            { id: "tech", icon: "💻", title: { ar: "البرمجة والتقنية", en: "Tech & Coding" }, questions: [
+                { q: { ar: "أي لغة تستخدم لتنسيق صفحات الويب (CSS)؟", en: "What is CSS used for?" }, options: ["تنسيق وتصميم الويب", "هيكلة البيانات", "قواعد البيانات", "الذكاء الاصطناعي"], ans: "تنسيق وتصميم الويب" },
+                { q: { ar: "ماذا تعني اختصار لغة HTML؟", en: "What does HTML stand for?" }, options: ["HyperText Markup Language", "High Tech Modern Language", "Hyper Transfer Machine", "Home Tool Markup Language"], ans: "HyperText Markup Language" },
+                { q: { ar: "من هو مبتكر لغة جافاسكريبت؟", en: "Creator of JavaScript?" }, options: ["برندان إيك", "ביל غيتس", "ستيف جوبز", "لينوس تورفالدس"], ans: "برندان إيك" }
+            ]},
+            { id: "math", icon: "🔢", title: { ar: "الرياضيات والمنطق", en: "Math & Logic" }, questions: [
+                { q: { ar: "ما هو الجذر التربيعي للعدد 144؟", en: "Square root of 144?" }, options: ["12", "14", "16", "11"], ans: "12" },
+                { q: { ar: "ما هو حاصل ضرب 8 × 7 ؟", en: "What is 8 × 7 ?" }, options: ["56", "48", "64", "54"], ans: "56" },
+                { q: { ar: "كم يساوي مجموع زوايا المثلث الداخلية؟", en: "Sum of triangle interior angles?" }, options: ["180 درجة", "360 درجة", "90 درجة", "270 درجة"], ans: "180 درجة" }
+            ]}
+        ];
+
+        let currentLang = 'ar';
+        let selectedCategory = 'space';
+        let currentTheme = 'lava';
+        let questionPool = [];
+        let currentIdx = 0;
+        let score = 0;
+        let timerInterval = null;
+        let timerLeft = 15;
+        let isAnswering = false;
+        let usedLifelines = { '5050': false, 'freeze': false, 'skip': false };
+
+        window.onload = function() {
+            setLanguage('ar');
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event?.target?.classList.add('active') || document.querySelectorAll('.lang-btn')[lang === 'ar' ? 0 : 1].classList.add('active');
+            document.body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+            const t = i18n[lang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-subtitle').innerText = t.subtitle;
+            document.getElementById('lbl-themes').innerText = t.themesLbl;
+            document.getElementById('lbl-categories').innerText = t.categoriesLbl;
+            document.getElementById('btn-start').innerText = t.startBtn;
+            document.getElementById('btn-restart').innerText = t.restartBtn;
+            document.getElementById('btn-home').innerText = t.homeBtn;
+            document.getElementById('txt-end-title').innerText = t.endTitle;
+            document.getElementById('txt-end-sub').innerText = t.endSub;
+
+            renderCategories();
+        }
+
+        function setTheme(themeName, el) {
+            currentTheme = themeName;
+            document.body.className = `theme-${themeName}`;
+            document.querySelectorAll('.modes-grid .mode-tile').forEach(m => m.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('category-selector');
+            container.innerHTML = '';
+            categoriesData.forEach(cat => {
+                const el = document.createElement('div');
+                el.className = `cat-card ${cat.id === selectedCategory ? 'active' : ''}`;
+                el.onclick = () => {
+                    selectedCategory = cat.id;
+                    document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+                    el.classList.add('active');
+                };
+                el.innerHTML = `<span class="icon">${cat.icon}</span><span>${cat.title[currentLang]}</span>`;
+                container.appendChild(el);
+            });
+        }
+
+        function navScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function startGame() {
+            const catObj = categoriesData.find(c => c.id === selectedCategory) || categoriesData[0];
+            // خلط الأسئلة الخاصة بالفئة المحددة فقط
+            questionPool = [...catObj.questions].sort(() => Math.random() - 0.5);
+            currentIdx = 0;
+            score = 0;
+            isAnswering = false;
+            usedLifelines = { '5050': false, 'freeze': false, 'skip': false };
+
+            updateLifelines();
+            navScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswering = false;
+            const catObj = categoriesData.find(c => c.id === selectedCategory);
+            const qData = questionPool[currentIdx % questionPool.length];
+
+            document.getElementById('hud-cat').innerText = catObj.icon + " " + catObj.title[currentLang];
+            document.getElementById('hud-progress').innerText = `السؤال ${currentIdx + 1} / ${questionPool.length}`;
+            document.getElementById('hud-score').innerText = `🏆 النقاط: ${score}`;
+            document.getElementById('question-text').innerText = qData.q[currentLang];
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            let shuffledOpts = [...qData.options].sort(() => Math.random() - 0.5);
+            shuffledOpts.forEach(optText => {
+                const btn = document.createElement('div');
+                btn.className = 'opt-card';
+                btn.innerText = optText;
+                btn.onclick = () => selectOption(btn, optText, qData.ans);
+                container.appendChild(btn);
+            });
+
+            runTimer();
+        }
+
+        function runTimer() {
+            clearInterval(timerInterval);
+            timerLeft = 15;
+            const bar = document.getElementById('timer-bar');
+            bar.style.width = '100%';
+
+            timerInterval = setInterval(() => {
+                timerLeft--;
+                bar.style.width = `${(timerLeft / 15) * 100}%`;
+                if (timerLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        function selectOption(selectedEl, selectedVal, correctVal) {
+            if (isAnswering) return;
+            isAnswering = true;
+            clearInterval(timerInterval);
+
+            const cards = document.querySelectorAll('.opt-card');
+            cards.forEach(c => c.classList.add('disabled'));
+
+            if (selectedVal === correctVal) {
+                selectedEl.classList.add('correct');
+                score += 10;
+                confetti({ particleCount: 30, spread: 60, origin: { y: 0.7 } });
+            } else {
+                selectedEl.classList.add('wrong');
+                cards.forEach(c => { if (c.innerText === correctVal) c.classList.add('correct'); });
+            }
+
+            document.getElementById('hud-score').innerText = `🏆 النقاط: ${score}`;
+
+            setTimeout(() => {
+                nextQuestion();
+            }, 800);
+        }
+
+        function handleTimeOut() {
+            if (isAnswering) return;
+            isAnswering = true;
+
+            const qData = questionPool[currentIdx % questionPool.length];
+            const cards = document.querySelectorAll('.opt-card');
+            cards.forEach(c => {
+                c.classList.add('disabled');
+                if (c.innerText === qData.ans) c.classList.add('correct');
+            });
+
+            setTimeout(() => {
+                nextQuestion();
+            }, 800);
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < questionPool.length) {
+                loadQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function trigger5050() {
+            if (usedLifelines['5050'] || isAnswering) return;
+            usedLifelines['5050'] = true;
+            document.getElementById('life-5050').disabled = true;
+
+            const qData = questionPool[currentIdx % questionPool.length];
+            const cards = Array.from(document.querySelectorAll('.opt-card'));
+            let removed = 0;
+            cards.forEach(c => {
+                if (c.innerText !== qData.ans && removed < 1) {
+                    c.style.visibility = 'hidden';
+                    removed++;
+                }
+            });
+        }
+
+        function triggerFreeze() {
+            if (usedLifelines['freeze'] || isAnswering) return;
+            usedLifelines['freeze'] = true;
+            document.getElementById('life-freeze').disabled = true;
+            timerLeft += 10;
+        }
+
+        function triggerSkip() {
+            if (usedLifelines['skip'] || isAnswering) return;
+            usedLifelines['skip'] = true;
+            document.getElementById('life-skip').disabled = true;
+            nextQuestion();
+        }
+
+        function updateLifelines() {
+            document.getElementById('life-5050').disabled = usedLifelines['5050'];
+            document.getElementById('life-freeze').disabled = usedLifelines['freeze'];
+            document.getElementById('life-skip').disabled = usedLifelines['skip'];
+        }
+
+        function endGame() {
+            navScreen('screen-end');
+            const maxScore = questionPool.length * 10;
+            const statsGrid = document.getElementById('end-stats-grid');
+            const accuracyVal = Math.round((score / maxScore) * 100) || 0;
+
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="val">${score} / ${maxScore}</div>
+                    <div class="lbl">مجموع النقاط</div>
+                </div>
+                <div class="stat-card">
+                    <div class="val">${accuracyVal}%</div>
+                    <div class="lbl">نسبة الدقة</div>
+                </div>
+            `;
+
+            if (score >= maxScore * 0.7) {
+                confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+            }
+        }
+    </script>
+</body>
+</html>
