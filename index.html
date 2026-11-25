@@ -1,28 +1,49 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="theme-color" content="#090d18">
+
 <title>Hassan Code Studio</title>
+
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
 <style>
 :root{
- --bg:#090d18;--panel:#111a2b;--panel2:#1a2740;
- --line:#293954;--blue:#7187ff;--cyan:#35d9d3;
- --text:#edf3ff;--muted:#93a3bf;
+ --bg:#090d18;
+ --panel:#111a2b;
+ --panel2:#1a2740;
+ --line:#293954;
+ --blue:#7187ff;
+ --cyan:#35d9d3;
+ --text:#edf3ff;
+ --muted:#93a3bf;
 }
 *{box-sizing:border-box}
 body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,sans-serif;height:100dvh;overflow:hidden
+ margin:0;
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,sans-serif;
+ min-height:100vh;
 }
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 header{
- height:62px;background:var(--panel);
+ height:62px;
+ background:var(--panel);
  border-bottom:1px solid var(--line);
- display:flex;align-items:center;justify-content:space-between;
- padding:0 13px
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 13px;
+ position:sticky;
+ top:0;
+ z-index:5;
 }
 .brand{display:flex;align-items:center;gap:9px;font-weight:bold}
 .logo{
@@ -31,104 +52,158 @@ header{
  background:linear-gradient(135deg,var(--blue),var(--cyan));
  font-size:21px;font-weight:bold
 }
-.brand small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-.btn{
- border:1px solid var(--line);background:var(--panel2);
- color:white;padding:11px 13px;border-radius:11px
+.brand small{
+ display:block;color:var(--muted);
+ font-size:10px;margin-top:3px
 }
-.primary{background:var(--blue);color:#09101d;border-color:var(--blue);font-weight:bold}
+.btn{
+ border:1px solid var(--line);
+ background:var(--panel2);
+ color:white;
+ padding:11px 13px;
+ border-radius:11px
+}
+.primary{
+ background:var(--blue);
+ color:#09101d;
+ border-color:var(--blue);
+ font-weight:bold
+}
 .danger{color:#ff8b99}
-main{height:calc(100dvh - 62px);overflow:auto}
-.page{display:none;padding:16px 13px 90px;min-height:100%}
+main{
+ max-width:850px;
+ margin:auto;
+ padding:15px 13px 80px
+}
+.page{display:none}
 .page.active{display:block}
-.heading{display:flex;align-items:center;justify-content:space-between;margin:8px 0 17px}
+.heading{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ margin:8px 0 17px;
+ gap:10px
+}
 h2{font-size:21px;margin:0 0 6px}
 h3{font-size:15px;margin:0 0 12px}
 p{color:var(--muted);font-size:12px;line-height:1.8}
-.card{
- background:var(--panel);border:1px solid var(--line);
- border-radius:17px;padding:15px;margin-bottom:12px
+.card,.project{
+ background:var(--panel);
+ border:1px solid var(--line);
+ border-radius:16px;
+ padding:15px;
+ margin-bottom:12px
 }
-.project{
- background:linear-gradient(145deg,#18243a,#111a2b);
- border:1px solid var(--line);border-radius:16px;
- padding:15px;margin-bottom:11px
-}
+.project{background:linear-gradient(145deg,#18243a,#111a2b)}
 .project-top{display:flex;align-items:center;gap:11px}
 .project-icon{
- width:44px;height:44px;border-radius:13px;
- display:grid;place-items:center;background:#293b62;font-size:22px
+ width:44px;height:44px;
+ border-radius:13px;
+ display:grid;place-items:center;
+ background:#293b62;
+ font-size:22px
 }
 .project-name{font-weight:bold;font-size:14px}
 .project-info{font-size:11px;color:var(--muted);margin-top:5px}
 .project-actions{display:flex;gap:7px;margin-top:14px}
 .project-actions button{flex:1;font-size:12px;padding:10px 4px}
 input,textarea{
- width:100%;background:#0b1322;color:white;
- border:1px solid var(--line);border-radius:11px;
- padding:12px;outline:none
+ width:100%;
+ background:#0b1322;
+ color:white;
+ border:1px solid var(--line);
+ border-radius:11px;
+ padding:12px;
+ outline:none
 }
 input:focus,textarea:focus{border-color:var(--blue)}
-label{display:block;color:var(--muted);font-size:12px;margin:13px 0 7px}
-.editor-tabs{display:flex;gap:6px;margin-bottom:10px}
-.editor-tabs button{flex:1}
-.editor-tabs button.active{background:var(--blue);color:#07111e}
+label{
+ display:block;
+ color:var(--muted);
+ font-size:12px;
+ margin:13px 0 7px
+}
 #code{
- height:48vh;min-height:200px;resize:vertical;
- direction:ltr;text-align:left;font:13px/1.8 monospace;
+ height:55vh;
+ min-height:230px;
+ resize:vertical;
+ direction:ltr;
+ text-align:left;
+ font:13px/1.8 monospace
 }
 .toolbar{display:flex;gap:7px;margin-top:10px}
 .toolbar button{flex:1}
 iframe{
- width:100%;height:350px;background:white;
- border:0;border-radius:11px
+ width:100%;
+ height:400px;
+ background:white;
+ border:0;
+ border-radius:11px
 }
 .empty{
- text-align:center;padding:55px 15px;color:var(--muted)
+ text-align:center;
+ padding:45px 15px;
+ color:var(--muted)
 }
 .empty-icon{font-size:45px;margin-bottom:15px}
-.bottom{
- position:fixed;bottom:0;right:0;left:0;height:65px;
- background:#111a2b;border-top:1px solid var(--line);
- display:grid;grid-template-columns:repeat(3,1fr);
- padding-bottom:env(safe-area-inset-bottom);z-index:5
-}
-.bottom button{
- border:0;background:none;color:var(--muted);
- display:flex;flex-direction:column;align-items:center;
- justify-content:center;gap:4px;font-size:11px
-}
-.bottom button.active{color:var(--cyan)}
-.bottom span{font-size:20px}
 .status{font-size:11px;color:var(--muted);margin-top:10px}
-#editorTitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media(min-width:750px){
- body{max-width:900px;margin:auto}
- .page{padding-left:25px;padding-right:25px}
+#userInfo{font-size:10px;color:var(--muted);margin-top:3px}
+#authPage{
+ max-width:500px;
+ margin:auto;
+ padding:20px 13px
 }
+#authMessage{overflow-wrap:anywhere}
+.owner-label{font-size:11px;color:var(--cyan)}
 </style>
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/png" href="./icon-192.png">
-<link rel="apple-touch-icon" href="./icon-192.png">
 </head>
+
 <body>
 
 <header>
  <div class="brand">
   <div class="logo">H</div>
-  <div>Hassan Code Studio<small>مساحة مشاريعك</small></div>
+  <div>
+   Hassan Code Studio
+   <small id="userInfo">مساحة مشاريعك</small>
+  </div>
  </div>
- <button class="btn" onclick="goHome()">مشاريعي</button>
+ <button class="btn" id="logoutBtn" onclick="logout()" style="display:none">
+  خروج
+ </button>
 </header>
 
+<!-- تسجيل الدخول -->
+<div id="authPage">
+ <div class="card" style="margin-top:25px">
+  <h2>أهلاً بك 👋</h2>
+  <p>سجّل دخولك إلى Hassan Code Studio</p>
+
+  <label>البريد الإلكتروني</label>
+  <input id="email" type="email" placeholder="example@gmail.com">
+
+  <label>كلمة المرور</label>
+  <input id="password" type="password" placeholder="كلمة المرور">
+
+  <button class="btn primary" style="width:100%;margin-top:17px"
+   onclick="login()">تسجيل الدخول</button>
+
+  <button class="btn" style="width:100%;margin-top:9px"
+   onclick="register()">إنشاء حساب جديد</button>
+
+  <p id="authMessage"></p>
+ </div>
+</div>
+
+<!-- التطبيق -->
+<div id="app" style="display:none">
 <main>
 
-<!-- الصفحة الرئيسية -->
 <section class="page active" id="home">
  <div class="heading">
   <div>
-   <h2>مشاريعي 👋</h2>
-   <p>كل مشاريعك المحفوظة بمكان واحد.</p>
+   <h2 id="homeTitle">مشاريعي 👋</h2>
+   <p id="homeDescription">مشاريعك المحفوظة.</p>
   </div>
   <button class="btn primary" onclick="newProject()">＋ جديد</button>
  </div>
@@ -137,168 +212,310 @@ iframe{
 
  <div class="card">
   <h3>⚡ Hassan Code Studio</h3>
-  <p>اكتب الأكواد، احفظ مشاريعك، وعدّلها وشغّلها متى ما تريد.</p>
+  <p>أنشئ مشاريع HTML وشغّلها من هاتفك.</p>
  </div>
 </section>
 
-<!-- إنشاء مشروع -->
 <section class="page" id="create">
  <div class="heading"><h2>مشروع جديد</h2></div>
  <div class="card">
-  <h3>📁 معلومات المشروع</h3>
   <label>اسم المشروع</label>
   <input id="newName" maxlength="50" placeholder="مثلاً: موقعي الشخصي">
-  <p>راح ينحفظ المشروع باسمك وتكدر ترجعله بأي وقت.</p>
+  <p>اكتب اسم المشروع وبعدها اكتب الكود واحفظه.</p>
   <button class="btn primary" style="width:100%" onclick="createProject()">
    إنشاء وفتح المحرر
   </button>
  </div>
 </section>
 
-<!-- المحرر -->
 <section class="page" id="editor">
  <div class="heading">
   <div>
-   <h2 id="editorTitle">المحرر</h2>
-   <p id="saveMessage">جاهز للكتابة</p>
+   <h2 id="editorTitle">محرر HTML</h2>
+   <p id="saveMessage">اكتب كود مشروعك</p>
   </div>
   <button class="btn primary" onclick="saveProject()">💾 حفظ</button>
  </div>
 
  <div class="card">
-  <div class="editor-tabs">
-   <button class="btn active" id="tab-html" onclick="switchTab('html')">HTML</button>
-   <button class="btn" id="tab-css" onclick="switchTab('css')">CSS</button>
-   <button class="btn" id="tab-js" onclick="switchTab('js')">JavaScript</button>
-  </div>
+  <h3>محرر HTML</h3>
 
-  <textarea id="code" spellcheck="false"
-   autocapitalize="off" autocomplete="off" autocorrect="off"
-   placeholder="اكتب الكود هنا..." oninput="editCode()"></textarea>
+  <textarea id="code"
+   spellcheck="false"
+   autocapitalize="off"
+   autocomplete="off"
+   autocorrect="off"
+   placeholder="اكتب كود HTML الكامل هنا..."></textarea>
 
   <div class="toolbar">
    <button class="btn primary" onclick="saveProject()">💾 حفظ</button>
    <button class="btn" onclick="runProject()">▶ تشغيل</button>
   </div>
-  <div class="status" id="editorStatus">لم يتم إجراء تغييرات</div>
+
+  <div class="status" id="editorStatus"></div>
  </div>
 </section>
 
-<!-- المعاينة -->
 <section class="page" id="run">
  <div class="heading">
-  <div><h2>معاينة المشروع</h2><p id="previewName"></p></div>
-  <button class="btn" onclick="runProject()">↻ تحديث</button>
+  <div>
+   <h2>معاينة المشروع</h2>
+   <p id="previewName"></p>
+  </div>
+  <button class="btn" onclick="refreshPreview()">↻ تحديث</button>
  </div>
+
  <div class="card">
   <iframe id="preview" sandbox="allow-scripts"></iframe>
  </div>
- <button class="btn" style="width:100%" onclick="editCurrent()">✏️ تعديل المشروع</button>
 </section>
 
 </main>
+</div>
 
-<nav class="bottom">
- <button class="active" id="nav-home" onclick="goHome()"><span>📁</span>مشاريعي</button>
- <button id="nav-create" onclick="newProject()"><span>＋</span>مشروع جديد</button>
- <button id="nav-editor" onclick="openLastEditor()"><span>⌨️</span>المحرر</button>
-</nav>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <script>
-const STORAGE="hassan_code_studio_projects_v2";
 
-const template={
- html:`<!DOCTYPE html>
+// ==================================
+// Firebase configuration
+// ==================================
+
+const firebaseConfig = {
+ apiKey: "AIzaSyAEbrW7PXp0tWqT-rH6HHEw_Vs2fbsdF94",
+ authDomain: "hassan-code-studio.firebaseapp.com",
+ projectId: "hassan-code-studio",
+ storageBucket: "hassan-code-studio.firebasestorage.app",
+ messagingSenderId: "1068281263448",
+ appId: "1:1068281263448:web:6079c52e0e1ef0787e212d",
+ measurementId: "G-5C9MBCVXWN"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const ADMIN_UID = "Q1Tp03lc5BRbbJUxMTDQX484CQO2";
+
+let user = null;
+let isAdmin = false;
+let projects = [];
+let currentProject = null;
+let currentId = null;
+let unsubscribe = null;
+
+// ==================================
+// Template
+// ==================================
+
+const template = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>مشروعي</title>
+<style>
+body{
+background:#101827;
+color:white;
+font-family:Arial;
+text-align:center;
+padding:40px 15px;
+}
+h1{color:#7187ff}
+button{
+background:#7187ff;
+color:white;
+border:0;
+padding:13px 20px;
+border-radius:10px;
+}
+</style>
 </head>
 <body>
 <h1>أهلاً بك!</h1>
 <p>هذا أول مشروع لي.</p>
 <button onclick="hello()">اضغط هنا</button>
+<script>
+function hello(){
+alert("أهلاً بك في مشروعي!");
+}
+<\/script>
 </body>
-</html>`,
- css:`body{
- background:#101827;
- color:white;
- font-family:Arial;
- text-align:center;
- padding:40px 15px;
-}
-h1{color:#7187ff}
-button{
- background:#7187ff;color:white;
- border:0;padding:13px 20px;
- border-radius:10px;
-}`,
- js:`function hello(){
- alert("أهلاً بك في مشروعي!");
-}`
-};
+</html>`;
 
-let projects=loadProjects();
-let currentId=null;
-let currentTab="html";
-let lastEditorId=null;
+// ==================================
+// Authentication
+// ==================================
 
-function loadProjects(){
+async function login(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const msg=document.getElementById("authMessage");
+
+ if(!email || !password){
+  msg.textContent="اكتب البريد وكلمة المرور.";
+  return;
+ }
+
  try{
-  const data=JSON.parse(localStorage.getItem(STORAGE));
-  return Array.isArray(data)?data:[];
- }catch(e){return [];}
-}
-
-function persist(){
- try{
-  localStorage.setItem(STORAGE,JSON.stringify(projects));
-  return true;
+  await auth.signInWithEmailAndPassword(email,password);
  }catch(e){
-  alert("مساحة التخزين غير كافية أو تعذر الحفظ.");
-  return false;
+  msg.textContent="تعذر تسجيل الدخول: "+e.message;
  }
 }
 
+async function register(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const msg=document.getElementById("authMessage");
+
+ if(!email || !password){
+  msg.textContent="اكتب البريد وكلمة المرور.";
+  return;
+ }
+
+ if(password.length<6){
+  msg.textContent="كلمة المرور لازم تكون 6 أحرف على الأقل.";
+  return;
+ }
+
+ try{
+  await auth.createUserWithEmailAndPassword(email,password);
+ }catch(e){
+  msg.textContent="تعذر إنشاء الحساب: "+e.message;
+ }
+}
+
+// ==================================
+// Authentication state
+// ==================================
+
+auth.onAuthStateChanged(u=>{
+ if(unsubscribe){
+  unsubscribe();
+  unsubscribe=null;
+ }
+
+ user=u;
+
+ if(!u){
+  projects=[];
+  currentProject=null;
+  currentId=null;
+
+  document.getElementById("authPage").style.display="block";
+  document.getElementById("app").style.display="none";
+  document.getElementById("logoutBtn").style.display="none";
+  return;
+ }
+
+ isAdmin = u.uid === ADMIN_UID;
+
+ document.getElementById("authPage").style.display="none";
+ document.getElementById("app").style.display="block";
+ document.getElementById("logoutBtn").style.display="block";
+
+ document.getElementById("userInfo").textContent =
+  u.email + (isAdmin ? " · مدير 👑" : "");
+
+ document.getElementById("homeTitle").textContent =
+  isAdmin ? "لوحة الإدارة 👑" : "مشاريعي 👋";
+
+ document.getElementById("homeDescription").textContent =
+  isAdmin ? "كل مشاريع المستخدمين تظهر هنا." : "مشاريعك المحفوظة.";
+
+ goHome();
+ listenProjects();
+});
+
+// ==================================
+// Firestore listener
+// ==================================
+
+function listenProjects(){
+ let query=db.collection("projects");
+
+ if(!isAdmin){
+  query=query.where("ownerId","==",user.uid);
+ }
+
+ unsubscribe=query.onSnapshot(snapshot=>{
+  projects=snapshot.docs.map(doc=>({
+   id:doc.id,
+   ...doc.data()
+  }));
+
+  projects.sort((a,b)=>
+   (b.updatedAt||0)-(a.updatedAt||0)
+  );
+
+  renderProjects();
+
+ },error=>{
+  alert("خطأ بتحميل المشاريع: "+error.message);
+ });
+}
+
+// ==================================
+// Navigation
+// ==================================
+
 function page(id){
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.querySelectorAll(".page").forEach(p=>{
+  p.classList.remove("active");
+ });
+
  document.getElementById(id).classList.add("active");
- document.querySelectorAll(".bottom button").forEach(b=>b.classList.remove("active"));
- const nav=document.getElementById("nav-"+id);
- if(nav)nav.classList.add("active");
 }
 
 function goHome(){
- renderProjects();
  page("home");
 }
 
+// ==================================
+// Create project
+// ==================================
+
 function newProject(){
+ if(!user)return;
+
  document.getElementById("newName").value="";
  page("create");
- setTimeout(()=>document.getElementById("newName").focus(),100);
 }
 
 function createProject(){
  const name=document.getElementById("newName").value.trim();
- if(!name){alert("اكتب اسم المشروع أولاً");return;}
 
- const project={
-  id:Date.now().toString()+"_"+Math.random().toString(36).slice(2,7),
-  name,
-  files:{...template},
-  created:Date.now(),
-  updated:Date.now()
- };
-
- projects.unshift(project);
- if(!persist()){
-  projects.shift();
+ if(!name){
+  alert("اكتب اسم المشروع أولاً.");
   return;
  }
- openEditor(project.id);
+
+ currentId=null;
+
+ currentProject={
+  name:name,
+  html:template,
+  ownerId:user.uid,
+  ownerEmail:user.email
+ };
+
+ document.getElementById("editorTitle").textContent=name;
+ document.getElementById("code").value=template;
+ document.getElementById("editorStatus").textContent="مشروع جديد غير محفوظ";
+ document.getElementById("saveMessage").textContent="اكتب كودك ثم احفظ";
+
+ page("editor");
 }
+
+// ==================================
+// Render projects
+// ==================================
 
 function renderProjects(){
  const list=document.getElementById("projectList");
@@ -308,9 +525,8 @@ function renderProjects(){
   list.innerHTML=`
    <div class="empty">
     <div class="empty-icon">📂</div>
-    <h3>ما عندك مشاريع محفوظة بعد</h3>
-    <p>ابدأ بإنشاء مشروعك الأول واكتب أكوادك.</p>
-    <button class="btn primary" onclick="newProject()">＋ إنشاء أول مشروع</button>
+    <h3>ماكو مشاريع بعد</h3>
+    <p>ابدأ بإنشاء أول مشروع.</p>
    </div>`;
   return;
  }
@@ -331,11 +547,14 @@ function renderProjects(){
 
   const name=document.createElement("div");
   name.className="project-name";
-  name.textContent=p.name;
+  name.textContent=p.name||"مشروع بدون اسم";
 
   const details=document.createElement("div");
   details.className="project-info";
-  details.textContent="HTML · CSS · JavaScript";
+
+  details.textContent=isAdmin
+   ? "صاحب المشروع: "+(p.ownerEmail||"غير معروف")
+   : "مشروعك المحفوظ";
 
   info.append(name,details);
   top.append(icon,info);
@@ -348,143 +567,201 @@ function renderProjects(){
   run.textContent="▶ تشغيل";
   run.onclick=()=>openPreview(p.id);
 
-  const edit=document.createElement("button");
-  edit.className="btn primary";
-  edit.textContent="✏️ تعديل";
-  edit.onclick=()=>openEditor(p.id);
+  actions.append(run);
 
-  const del=document.createElement("button");
-  del.className="btn danger";
-  del.textContent="🗑";
-  del.onclick=()=>deleteProject(p.id);
+  if(isAdmin){
+   const edit=document.createElement("button");
+   edit.className="btn primary";
+   edit.textContent="✏️ تعديل";
+   edit.onclick=()=>openEditor(p.id);
 
-  actions.append(run,edit,del);
+   const del=document.createElement("button");
+   del.className="btn danger";
+   del.textContent="🗑 حذف";
+   del.onclick=()=>deleteProject(p.id);
+
+   actions.append(edit,del);
+  }
+
   card.append(top,actions);
-  list.appendChild(card);
+  list.append(card);
  });
 }
 
-function getCurrent(){
- return projects.find(p=>p.id===currentId);
-}
+// ==================================
+// Open editor
+// ==================================
 
 function openEditor(id){
+ if(!isAdmin){
+  alert("التعديل متاح للمدير فقط.");
+  return;
+ }
+
  const p=projects.find(x=>x.id===id);
  if(!p)return;
+
  currentId=id;
- lastEditorId=id;
- currentTab="html";
+ currentProject={...p};
+
  document.getElementById("editorTitle").textContent=p.name;
- loadTab();
+ document.getElementById("code").value=p.html||"";
+ document.getElementById("editorStatus").textContent="تعديل مشروع محفوظ";
+ document.getElementById("saveMessage").textContent="مشروع المستخدم";
+
  page("editor");
 }
 
-function loadTab(){
- const p=getCurrent();
- if(!p)return;
- document.getElementById("code").value=p.files[currentTab]||"";
- ["html","css","js"].forEach(t=>{
-  document.getElementById("tab-"+t).classList.toggle("active",t===currentTab);
- });
-}
+// ==================================
+// Save project
+// ==================================
 
-function switchTab(tab){
- saveCurrentText();
- currentTab=tab;
- loadTab();
-}
+async function saveProject(){
+ if(!currentProject || !user)return;
 
-function saveCurrentText(){
- const p=getCurrent();
- if(!p)return;
- p.files[currentTab]=document.getElementById("code").value;
-}
+ const html=document.getElementById("code").value;
 
-function editCode(){
- saveCurrentText();
- const p=getCurrent();
- if(!p)return;
- p.updated=Date.now();
- document.getElementById("editorStatus").textContent="هناك تغييرات غير محفوظة";
- document.getElementById("saveMessage").textContent="تعديلات جديدة";
-}
+ if(!html.trim()){
+  alert("اكتب كود HTML أولاً.");
+  return;
+ }
 
-function saveProject(){
- const p=getCurrent();
- if(!p)return;
- saveCurrentText();
- p.updated=Date.now();
- if(persist()){
-  document.getElementById("editorStatus").textContent="✓ تم حفظ المشروع";
-  document.getElementById("saveMessage").textContent="✓ محفوظ";
+ currentProject.html=html;
+
+ try{
+
+  if(!currentId){
+
+   const doc={
+    name:currentProject.name,
+    html:html,
+    ownerId:user.uid,
+    ownerEmail:user.email,
+    createdAt:Date.now(),
+    updatedAt:Date.now()
+   };
+
+   const ref=await db.collection("projects").add(doc);
+
+   currentId=ref.id;
+   currentProject={...doc,id:ref.id};
+
+   document.getElementById("editorStatus").textContent=
+    "✓ تم حفظ المشروع في Firebase";
+
+   alert("تم حفظ مشروعك بنجاح!");
+
+   goHome();
+   return;
+  }
+
+  if(!isAdmin){
+   alert("ما عندك صلاحية تعديل هذا المشروع.");
+   return;
+  }
+
+  await db.collection("projects").doc(currentId).update({
+   html:html,
+   updatedAt:Date.now()
+  });
+
+  document.getElementById("editorStatus").textContent=
+   "✓ تم تحديث المشروع";
+
+  document.getElementById("saveMessage").textContent=
+   "✓ تم حفظ تعديلات المدير";
+
+ }catch(e){
+  alert("تعذر الحفظ: "+e.message);
  }
 }
 
-function buildHTML(p){
- const html=p.files.html||"";
- const css=p.files.css||"";
- const js=p.files.js||"";
- const style="<style>"+css+"</style>";
- const script="<script>"+js.replace(/<\/script/gi,"<\\/script")+"<\/script>";
- let result=html;
- if(/<\/head>/i.test(result))result=result.replace(/<\/head>/i,style+"</head>");
- else result=style+result;
- if(/<\/body>/i.test(result))result=result.replace(/<\/body>/i,script+"</body>");
- else result+=script;
- return result;
-}
+// ==================================
+// Preview
+// ==================================
 
 function openPreview(id){
  const p=projects.find(x=>x.id===id);
  if(!p)return;
- saveCurrentText();
+
  currentId=id;
- lastEditorId=id;
+ currentProject={...p};
+
  document.getElementById("previewName").textContent=p.name;
- document.getElementById("preview").srcdoc=buildHTML(p);
+ document.getElementById("preview").srcdoc=p.html||"";
+
  page("run");
 }
 
 function runProject(){
- saveCurrentText();
- saveProject();
- const p=getCurrent();
- if(!p)return;
- document.getElementById("previewName").textContent=p.name;
- document.getElementById("preview").srcdoc=buildHTML(p);
+ if(!currentProject)return;
+
+ const html=document.getElementById("code").value;
+
+ document.getElementById("previewName").textContent=currentProject.name;
+ document.getElementById("preview").srcdoc=html;
+
  page("run");
 }
 
-function editCurrent(){
- if(currentId)openEditor(currentId);
-}
-
-function openLastEditor(){
- if(lastEditorId && projects.some(p=>p.id===lastEditorId)){
-  openEditor(lastEditorId);
- }else{
-  newProject();
+function refreshPreview(){
+ if(currentId){
+  const p=projects.find(x=>x.id===currentId);
+  if(p){
+   document.getElementById("preview").srcdoc=p.html||"";
+  }
  }
 }
 
-function deleteProject(id){
+// ==================================
+// Delete project
+// ==================================
+
+async function deleteProject(id){
+ if(!isAdmin){
+  alert("الحذف للمدير فقط.");
+  return;
+ }
+
  const p=projects.find(x=>x.id===id);
  if(!p)return;
- if(!confirm("هل تريد حذف المشروع: "+p.name+"؟"))return;
- projects=projects.filter(x=>x.id!==id);
- if(currentId===id)currentId=null;
- if(lastEditorId===id)lastEditorId=null;
- persist();
- renderProjects();
+
+ if(!confirm("هل تريد حذف المشروع "+p.name+"؟"))return;
+
+ try{
+  await db.collection("projects").doc(id).delete();
+ }catch(e){
+  alert("تعذر الحذف: "+e.message);
+ }
 }
 
-renderProjects();
+// ==================================
+// Logout
+// ==================================
 
-if('serviceWorker' in navigator){
- window.addEventListener('load',()=>{
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+async function logout(){
+ if(unsubscribe){
+  unsubscribe();
+  unsubscribe=null;
+ }
+
+ currentProject=null;
+ currentId=null;
+
+ await auth.signOut();
+}
+
+</script>
+
+<!-- تسجيل Service Worker القديم -->
+<script>
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>{
+  navigator.serviceWorker.register("./sw.js")
+   .catch(error=>console.error("Service Worker:",error));
  });
 }
 </script>
+
 </body>
 </html>
