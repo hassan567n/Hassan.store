@@ -1,618 +1,433 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#090d18">
+<meta name="theme-color" content="#090817">
 <title>Hassan Code Studio</title>
-
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-
 <style>
 :root{
- --bg:#090d18;
- --panel:#111a2b;
- --panel2:#1a2740;
- --line:#293954;
- --blue:#7187ff;
- --cyan:#35d9d3;
- --text:#edf3ff;
- --muted:#93a3bf;
- --red:#ff7185;
+ --bg:#090817;--panel:#121329;--panel2:#1b1d3b;--line:#303257;
+ --purple:#9277ff;--cyan:#42e4dc;--text:#f4f3ff;--muted:#a4a5c4;
+ --red:#ff718c;--green:#57e3a5;--gold:#ffd477;
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,sans-serif;min-height:100vh;padding-bottom:85px
+ margin:0;min-height:100vh;padding-bottom:100px;color:var(--text);
+ font-family:system-ui,Arial,sans-serif;
+ background:
+ radial-gradient(ellipse at 15% -10%,#292052 0,transparent 38%),
+ radial-gradient(ellipse at 100% 35%,#102b42 0,transparent 32%),var(--bg);
 }
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 header{
- height:66px;background:rgba(17,26,43,.96);
- border-bottom:1px solid var(--line);display:flex;
- align-items:center;justify-content:space-between;
- padding:0 15px;position:sticky;top:0;z-index:20;
- backdrop-filter:blur(15px)
+ height:72px;padding:0 16px;position:sticky;top:0;z-index:20;
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ background:#0d0d20eF;border-bottom:1px solid #39375d;
+ backdrop-filter:blur(18px);box-shadow:0 8px 30px #0003;
 }
-.brand{display:flex;align-items:center;gap:10px;font-weight:bold}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.2px}
 .logo{
- width:40px;height:40px;border-radius:13px;display:grid;
- place-items:center;color:#07111e;
- background:linear-gradient(135deg,var(--blue),var(--cyan));
- font-size:23px;font-weight:900
+ width:43px;height:43px;border-radius:15px;display:grid;place-items:center;
+ color:#090817;font-size:25px;font-weight:1000;
+ background:linear-gradient(135deg,#aa91ff,#43e8dc);
+ box-shadow:0 0 24px #9277ff55;
 }
-.brand small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.brand small{display:block;color:var(--muted);font-size:10px;margin-top:3px;font-weight:500}
 .btn{
- border:1px solid var(--line);background:var(--panel2);
- color:white;padding:11px 14px;border-radius:12px;transition:.2s
+ border:1px solid #3a3b63;background:linear-gradient(145deg,#222447,#17192f);
+ color:var(--text);padding:11px 14px;border-radius:14px;
+ transition:transform .2s,border-color .2s,box-shadow .2s;
 }
-.btn:active{transform:scale(.94)}
+.btn:active{transform:scale(.96)}
+.btn:hover{border-color:var(--cyan);box-shadow:0 0 18px #42e4dc20}
 .primary{
- background:linear-gradient(135deg,var(--blue),#8295ff);
- color:#09101d;border-color:var(--blue);font-weight:bold
+ border:0;color:#090817;font-weight:900;
+ background:linear-gradient(120deg,#a58aff,#55e7df);
+ box-shadow:0 7px 22px #9277ff35;
 }
 .danger{color:var(--red)}
-main{max-width:850px;margin:auto;padding:18px 14px 25px}
+.success{color:var(--green)}
+main{max-width:920px;margin:auto;padding:20px 15px 35px}
 .page{display:none}
-.page.active{display:block;animation:pageEnter .35s ease both}
-@keyframes pageEnter{
- from{opacity:0;transform:translateY(14px)}
- to{opacity:1;transform:translateY(0)}
-}
-.heading{
- display:flex;align-items:center;justify-content:space-between;
- margin:8px 0 20px;gap:10px
-}
-h2{font-size:22px;margin:0 0 6px}
+.page.active{display:block;animation:pageIn .32s ease both}
+@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 22px}
+h2{font-size:23px;margin:0 0 5px;letter-spacing:-.4px}
 h3{font-size:15px;margin:0 0 12px}
-p{color:var(--muted);font-size:12px;line-height:1.8}
+p{color:var(--muted);font-size:12px;line-height:1.9;margin:5px 0}
 .card,.project{
- background:var(--panel);border:1px solid var(--line);
- border-radius:18px;padding:16px;margin-bottom:13px
+ border:1px solid #34365a;border-radius:22px;padding:17px;margin-bottom:14px;
+ background:linear-gradient(145deg,#191a36eF,#111326f5);
+ box-shadow:0 14px 36px #0003;
 }
-.project{
- background:linear-gradient(145deg,#18243a,#111a2b);
- animation:projectEnter .4s ease both;
- transition:transform .2s,border-color .2s
+.project{position:relative;overflow:hidden;transition:.25s}
+.project:before{
+ content:"";position:absolute;inset:0 0 auto;height:2px;
+ background:linear-gradient(90deg,transparent,#9277ff,#42e4dc,transparent);opacity:.75;
 }
-.project:active{transform:scale(.985);border-color:var(--cyan)}
-@keyframes projectEnter{
- from{opacity:0;transform:translateY(15px)}
- to{opacity:1;transform:translateY(0)}
-}
+.project:active{transform:scale(.99)}
 .project-top{display:flex;align-items:center;gap:12px}
 .project-icon{
- width:46px;height:46px;border-radius:14px;
- display:grid;place-items:center;background:#293b62;font-size:22px
+ width:49px;height:49px;flex:0 0 49px;border-radius:16px;display:grid;place-items:center;
+ font-size:23px;background:linear-gradient(145deg,#5747a2,#176d78);
+ box-shadow:0 8px 20px #0003;
 }
-.project-name{font-weight:bold;font-size:14px}
-.project-info{
- font-size:11px;color:var(--muted);margin-top:6px;overflow-wrap:anywhere
-}
-.project-actions{display:flex;gap:7px;margin-top:15px}
-.project-actions button{flex:1;font-size:12px;padding:10px 4px}
+.project-name{font-weight:850;font-size:15px;overflow-wrap:anywhere}
+.project-info{font-size:11px;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
+.project-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.pill{font-size:10px;padding:4px 9px;border-radius:30px;background:#28294a;color:#c9c6ff;border:1px solid #41416c}
+.pill.public{background:#123b36;color:#78f1c0;border-color:#286d5e}
+.project-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.project-actions button{flex:1;min-width:85px;font-size:12px;padding:10px 7px}
 input,textarea{
- width:100%;background:#0b1322;color:white;
- border:1px solid var(--line);border-radius:12px;
- padding:13px;outline:none
+ width:100%;background:#0b0c1d;color:white;border:1px solid #393a60;
+ border-radius:14px;padding:14px;outline:none;
 }
-input:focus,textarea:focus{
- border-color:var(--blue);box-shadow:0 0 0 3px #7187ff18
-}
-label{display:block;color:var(--muted);font-size:12px;margin:14px 0 8px}
-#code{
- height:55vh;min-height:230px;resize:vertical;
- direction:ltr;text-align:left;font:13px/1.8 monospace;tab-size:2
-}
-.toolbar{display:flex;gap:8px;margin-top:12px}
+input:focus,textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #9277ff20}
+label{display:block;color:#c2c1dd;font-size:12px;margin:15px 0 8px}
+#code{height:55vh;min-height:260px;resize:vertical;direction:ltr;text-align:left;font:13px/1.8 ui-monospace,monospace;tab-size:2}
+.toolbar{display:flex;gap:9px;margin-top:12px}
 .toolbar button{flex:1}
-iframe{
- width:100%;height:420px;background:white;border:0;border-radius:12px
-}
-.empty{text-align:center;padding:55px 15px;color:var(--muted)}
-.empty-icon{font-size:48px;margin-bottom:15px}
+iframe{width:100%;height:65vh;min-height:420px;background:white;border:1px solid #393a60;border-radius:16px}
+.empty{text-align:center;padding:55px 15px;color:var(--muted);border:1px dashed #414166;border-radius:22px;background:#15162a88}
+.empty-icon{font-size:48px;margin-bottom:12px}
 .status{font-size:11px;color:var(--muted);margin-top:12px}
 #userInfo{font-size:10px;color:var(--muted);margin-top:4px}
-#authPage{max-width:500px;margin:auto;padding:20px 14px 40px}
-#authMessage{overflow-wrap:anywhere}
+#authPage{max-width:500px;margin:auto;padding:22px 15px 45px}
+.auth-card{margin-top:25px;padding:23px}
+.auth-mark{width:65px;height:65px;border-radius:21px;display:grid;place-items:center;font-size:36px;font-weight:1000;color:#080817;background:linear-gradient(135deg,#a58aff,#42e4dc);box-shadow:0 0 35px #9277ff55;margin-bottom:18px}
 .bottom-nav{
- position:fixed;bottom:0;left:0;right:0;z-index:30;
- display:flex;justify-content:space-around;gap:8px;
- padding:10px 15px calc(10px + env(safe-area-inset-bottom));
- background:rgba(17,26,43,.96);border-top:1px solid var(--line);
- backdrop-filter:blur(16px)
+ position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;gap:9px;
+ padding:10px 13px calc(10px + env(safe-area-inset-bottom));
+ background:#0d0d20f2;border-top:1px solid #39375d;backdrop-filter:blur(18px);
 }
-.nav-item{
- flex:1;border:1px solid transparent;background:transparent;
- color:var(--muted);padding:8px 5px;border-radius:13px;
- font-size:12px;transition:.25s
-}
-.nav-item span{display:block;font-size:21px;margin-bottom:4px}
-.nav-item.selected{
- color:var(--cyan);background:#253550;
- border-color:#35d9d333;transform:translateY(-3px)
-}
+.nav-item{flex:1;border:1px solid transparent;background:transparent;color:var(--muted);padding:9px 5px;border-radius:15px;font-size:11px;transition:.2s}
+.nav-item span{display:block;font-size:21px;margin-bottom:3px}
+.nav-item.selected{color:#62eee5;background:linear-gradient(145deg,#302653,#163440);border-color:#42e4dc44;box-shadow:0 5px 18px #0003}
 #intro{
- position:fixed;inset:0;z-index:1000;background:#090d18;
- display:flex;align-items:center;justify-content:center;
- flex-direction:column;transition:opacity .6s,visibility .6s
+ position:fixed;inset:0;z-index:1000;background:radial-gradient(circle at center,#251d4a,#090817 65%);
+ display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;
+ transition:opacity .65s,visibility .65s;
 }
 #intro.hide{opacity:0;visibility:hidden;pointer-events:none}
-.intro-logo{
- width:105px;height:105px;border-radius:29px;
- background:linear-gradient(135deg,#7187ff,#35d9d3);
- display:grid;place-items:center;color:#07111e;
- font-size:58px;font-weight:900;
- box-shadow:0 0 55px #7187ff55;
- animation:logoBuild 1.5s cubic-bezier(.2,.8,.2,1) both
+.drop-scene{position:relative;width:160px;height:155px;display:grid;place-items:center}
+.drop{position:absolute;width:23px;height:23px;border-radius:7px 50% 50% 50%;background:linear-gradient(135deg,#b09aff,#42e4dc);box-shadow:0 0 25px #9277ff;opacity:0}
+.d1{animation:drop1 1s .1s forwards}.d2{animation:drop2 1s .3s forwards}
+.d3{animation:drop3 1s .5s forwards}.d4{animation:drop4 1s .7s forwards}
+@keyframes drop1{0%{opacity:0;transform:translate(-70px,-100px)}65%{opacity:1;transform:translate(-18px,4px)}100%{opacity:0;transform:translate(0,0) scale(.2)}}
+@keyframes drop2{0%{opacity:0;transform:translate(70px,-100px)}65%{opacity:1;transform:translate(18px,4px)}100%{opacity:0;transform:translate(0,0) scale(.2)}}
+@keyframes drop3{0%{opacity:0;transform:translate(-70px,100px)}65%{opacity:1;transform:translate(-18px,-4px)}100%{opacity:0;transform:translate(0,0) scale(.2)}}
+@keyframes drop4{0%{opacity:0;transform:translate(70px,100px)}65%{opacity:1;transform:translate(18px,-4px)}100%{opacity:0;transform:translate(0,0) scale(.2)}}
+.formed-logo{
+ position:absolute;width:108px;height:108px;border-radius:30px;display:grid;place-items:center;
+ font-size:67px;font-weight:1000;color:#080817;background:linear-gradient(135deg,#aa91ff,#42e4dc);
+ box-shadow:0 0 60px #9277ff99;opacity:0;
+ animation:logoForm .8s 1.35s forwards,logoShake .5s 2.2s,logoRiseFall 1s 2.8s forwards;
 }
-@keyframes logoBuild{
- 0%{opacity:0;transform:scale(.1) rotate(-100deg);filter:blur(15px)}
- 60%{opacity:1;transform:scale(1.15) rotate(8deg);filter:blur(0)}
- 100%{transform:scale(1) rotate(0)}
-}
-.intro-title{
- margin-top:24px;font-size:21px;font-weight:bold;
- opacity:0;animation:titleAppear .7s 1s forwards
-}
-.intro-subtitle{
- margin-top:9px;color:var(--muted);font-size:11px;
- opacity:0;animation:titleAppear .7s 1.3s forwards
-}
-.intro-loader{
- width:110px;height:3px;background:#1c2940;
- border-radius:10px;overflow:hidden;margin-top:25px
-}
-.intro-loader::after{
- content:"";display:block;width:40%;height:100%;
- background:var(--cyan);border-radius:10px;
- animation:loading 1.4s ease-in-out infinite
-}
-@keyframes loading{
- from{transform:translateX(250%)}
- to{transform:translateX(-250%)}
-}
-@keyframes titleAppear{
- to{opacity:1;transform:translateY(0)}
- from{opacity:0;transform:translateY(10px)}
-}
-@media(prefers-reduced-motion:reduce){
- *,*::before,*::after{
-  animation-duration:.01ms!important;transition-duration:.01ms!important
- }
-}
+@keyframes logoForm{from{opacity:0;transform:scale(.1) rotate(-90deg);filter:blur(12px)}to{opacity:1;transform:scale(1) rotate(0);filter:blur(0)}}
+@keyframes logoShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(5deg)}}
+@keyframes logoRiseFall{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-42px) scale(1.08)}70%{transform:translateY(12px) scale(.95)}100%{transform:translateY(0) scale(1)}}
+.intro-title{margin-top:19px;font-size:19px;letter-spacing:2.5px;font-weight:1000;background:linear-gradient(90deg,#fff,#a894ff,#42e4dc);background-clip:text;-webkit-background-clip:text;color:transparent;opacity:0;animation:titleIn .8s 3.1s forwards}
+.intro-subtitle{margin-top:8px;color:#aaa9ca;font-size:10px;letter-spacing:3px;opacity:0;animation:titleIn .7s 3.5s forwards}
+.intro-loader{width:145px;height:3px;background:#292546;border-radius:9px;overflow:hidden;margin-top:24px}
+.intro-loader span{display:block;width:0;height:100%;background:linear-gradient(90deg,#9277ff,#42e4dc);animation:loadLine 4s ease forwards}
+@keyframes titleIn{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(10px)}}
+@keyframes loadLine{to{width:100%}}
+#publicPage{max-width:900px;margin:auto;padding:20px 15px}
+.public-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+@media(max-width:420px){.brand{font-size:13px}.heading{align-items:flex-start}.heading .btn{padding:10px;font-size:11px}.project-actions button{min-width:75px}.intro-title{font-size:16px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
-
 <body>
-
 <div id="intro">
- <div class="intro-logo">H</div>
- <div class="intro-title">Hassan Code Studio</div>
- <div class="intro-subtitle">Your creative coding space</div>
- <div class="intro-loader"></div>
+ <div class="drop-scene"><div class="drop d1"></div><div class="drop d2"></div><div class="drop d3"></div><div class="drop d4"></div><div class="formed-logo">H</div></div>
+ <div class="intro-title">HASSAN CODE STUDIO</div>
+ <div class="intro-subtitle">CREATE · CODE · INNOVATE</div>
+ <div class="intro-loader"><span></span></div>
 </div>
 
-<header>
- <div class="brand">
-  <div class="logo">H</div>
-  <div>
-   Hassan Code Studio
-   <small id="userInfo">مساحة مشاريعك</small>
-  </div>
- </div>
- <button class="btn" id="logoutBtn" onclick="logout()" style="display:none">
-  خروج
- </button>
+<header id="mainHeader">
+ <div class="brand"><div class="logo">H</div><div>Hassan Code Studio<small id="userInfo">مساحة مشاريعك الإبداعية</small></div></div>
+ <button class="btn" id="logoutBtn" onclick="logout()" style="display:none">خروج</button>
 </header>
 
 <div id="authPage">
- <div class="card" style="margin-top:25px">
-  <h2>أهلاً بك 👋</h2>
-  <p>سجّل دخولك إلى Hassan Code Studio</p>
-
-  <label>البريد الإلكتروني</label>
-  <input id="email" type="email" placeholder="example@gmail.com">
-
-  <label>كلمة المرور</label>
-  <input id="password" type="password" placeholder="كلمة المرور">
-
-  <button class="btn primary" style="width:100%;margin-top:18px" onclick="login()">
-   تسجيل الدخول
-  </button>
-  <button class="btn" style="width:100%;margin-top:10px" onclick="register()">
-   إنشاء حساب جديد
-  </button>
+ <div class="card auth-card">
+  <div class="auth-mark">H</div>
+  <h2>أهلاً بك 👋</h2><p>سجّل دخولك إلى مساحة الإبداع والبرمجة.</p>
+  <label>البريد الإلكتروني</label><input id="email" type="email" placeholder="example@gmail.com">
+  <label>كلمة المرور</label><input id="password" type="password" placeholder="كلمة المرور">
+  <button class="btn primary" style="width:100%;margin-top:19px" onclick="login()">تسجيل الدخول</button>
+  <button class="btn" style="width:100%;margin-top:10px" onclick="register()">إنشاء حساب جديد</button>
   <p id="authMessage"></p>
  </div>
 </div>
 
 <div id="app" style="display:none">
 <main>
-
-<section class="page active" id="home">
- <div class="heading">
-  <div>
-   <h2 id="homeTitle">مشاريعي 👋</h2>
-   <p id="homeDescription">مشاريعك المحفوظة.</p>
+ <section class="page active" id="home">
+  <div class="heading"><div><h2 id="homeTitle">مشاريعي 👋</h2><p id="homeDescription">كل أفكارك ومشاريعك بمكان واحد.</p></div><button class="btn primary" onclick="newProject()">＋ جديد</button></div>
+  <div id="projectList"></div>
+ </section>
+ <section class="page" id="create">
+  <div class="heading"><div><h2>مشروع جديد</h2><p>ابدأ فكرتك وحوّلها إلى مشروع.</p></div></div>
+  <div class="card">
+   <label>اسم المشروع</label><input id="newName" maxlength="50" placeholder="مثلاً: موقعي الشخصي">
+   <p>بعد إنشاء المشروع راح يفتح محرر HTML.</p>
+   <button class="btn primary" style="width:100%;margin-top:12px" onclick="createProject()">إنشاء وفتح المحرر</button>
   </div>
-  <button class="btn primary" onclick="newProject()">＋ جديد</button>
- </div>
- <div id="projectList"></div>
-</section>
-
-<section class="page" id="create">
- <div class="heading">
-  <div><h2>مشروع جديد</h2><p>ابدأ مشروعك الجديد.</p></div>
- </div>
- <div class="card">
-  <label>اسم المشروع</label>
-  <input id="newName" maxlength="50" placeholder="مثلاً: موقعي الشخصي">
-  <p>اكتب اسم المشروع وبعدها اكتب الكود واحفظه.</p>
-  <button class="btn primary" style="width:100%;margin-top:10px" onclick="createProject()">
-   إنشاء وفتح المحرر
-  </button>
- </div>
-</section>
-
-<section class="page" id="editor">
- <div class="heading">
-  <div>
-   <h2 id="editorTitle">محرر HTML</h2>
-   <p id="saveMessage">اكتب كود مشروعك</p>
+ </section>
+ <section class="page" id="editor">
+  <div class="heading"><div><h2 id="editorTitle">محرر HTML</h2><p id="saveMessage">اكتب كود مشروعك.</p></div><button class="btn primary" onclick="saveProject()">💾 حفظ</button></div>
+  <div class="card"><h3>⌨️ محرر HTML</h3>
+   <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="اكتب كود HTML الكامل هنا..."></textarea>
+   <div class="toolbar"><button class="btn primary" onclick="saveProject()">💾 حفظ</button><button class="btn" onclick="runProject()">▶ تشغيل</button></div>
+   <div class="status" id="editorStatus"></div>
   </div>
-  <button class="btn primary" onclick="saveProject()">💾 حفظ</button>
- </div>
- <div class="card">
-  <h3>محرر HTML</h3>
-  <textarea id="code" spellcheck="false" autocapitalize="off"
-   autocomplete="off" autocorrect="off"
-   placeholder="اكتب كود HTML الكامل هنا..."></textarea>
-  <div class="toolbar">
-   <button class="btn primary" onclick="saveProject()">💾 حفظ</button>
-   <button class="btn" onclick="runProject()">▶ تشغيل</button>
-  </div>
-  <div class="status" id="editorStatus"></div>
- </div>
-</section>
-
-<section class="page" id="run">
- <div class="heading">
-  <div><h2>معاينة المشروع</h2><p id="previewName"></p></div>
-  <button class="btn" onclick="refreshPreview()">↻ تحديث</button>
- </div>
- <div class="card">
-  <iframe id="preview" sandbox="allow-scripts"></iframe>
- </div>
-</section>
-
+ </section>
+ <section class="page" id="run">
+  <div class="heading"><div><h2>معاينة المشروع</h2><p id="previewName"></p></div><button class="btn" onclick="refreshPreview()">↻ تحديث</button></div>
+  <div class="card"><iframe id="preview" sandbox="allow-scripts allow-forms"></iframe></div>
+ </section>
 </main>
-
 <nav class="bottom-nav">
- <button class="nav-item selected" id="navHome"
-  onclick="goHome();selectNav('navHome')">
-  <span>⌂</span>الرئيسية
- </button>
- <button class="nav-item" id="navCreate"
-  onclick="newProject();selectNav('navCreate')">
-  <span>＋</span>مشروع جديد
- </button>
+ <button class="nav-item selected" id="navHome" onclick="goHome()"><span>⌂</span>الرئيسية</button>
+ <button class="nav-item" id="navCreate" onclick="newProject()"><span>✚</span>مشروع جديد</button>
 </nav>
 </div>
 
-<!-- Firebase libraries -->
+<div id="publicPage" style="display:none">
+ <div class="public-head"><div class="brand"><div class="logo">H</div><div>Hassan Code Studio<small>مشروع منشور للعامة</small></div></div><button class="btn" onclick="location.href=location.pathname">الرئيسية</button></div>
+ <div class="card"><h2 id="publicTitle">مشروع منشور</h2><p id="publicOwner">تمت مشاركته عبر Hassan Code Studio</p></div>
+ <iframe id="publicFrame" sandbox="allow-scripts allow-forms"></iframe>
+ <p style="text-align:center;margin-top:15px">تم النشر بواسطة Hassan Code Studio ✦</p>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-
 <script>
 "use strict";
-
-// Firebase Configuration
-const firebaseConfig = {
- apiKey: "AIzaSyAEbrW7PXp0tWqT-rH6HHEw_Vs2fbsdF94",
- authDomain: "hassan-code-studio.firebaseapp.com",
- projectId: "hassan-code-studio",
- storageBucket: "hassan-code-studio.firebasestorage.app",
- messagingSenderId: "1068281263448",
- appId: "1:1068281263448:web:6079c52e0e1ef0787e212d",
- measurementId: "G-5C9MBCVXWN"
+const firebaseConfig={
+ apiKey:"AIzaSyDZH9RgU__V86pmHjfzOT2E-5zhFybABQM",
+ authDomain:"hassan-code-studio.firebaseapp.com",
+ projectId:"hassan-code-studio",
+ storageBucket:"hassan-code-studio.firebasestorage.app",
+ messagingSenderId:"1068281263448",
+ appId:"1:1068281263448:web:6079c52e0e1ef0787e212d",
+ measurementId:"G-5C9MBCVXWN"
 };
-
-// Check Firebase libraries
-if(typeof firebase === "undefined"){
- document.getElementById("authMessage").textContent =
-  "تعذر تحميل Firebase. تأكد من الإنترنت وأن ملفات المكتبة لم تُحجب.";
+const ADMIN_UID="Q1Tp03lc5BRbbJUxMTDQX484CQO2";
+const authMessage=document.getElementById("authMessage");
+if(typeof firebase==="undefined"){
+ authMessage.textContent="تعذر تحميل Firebase. تحقق من الإنترنت.";
  throw new Error("Firebase SDK failed to load");
 }
-
+if(!firebaseConfig.apiKey){
+ authMessage.textContent="أضف مفتاح Firebase داخل apiKey قبل استخدام التطبيق.";
+}
 firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.firestore();
+let user=null,isAdmin=false,projects=[],currentProject=null,currentId=null,unsubscribe=null;
+const PUBLIC_PROJECT_ID=new URLSearchParams(location.search).get("public");
+let audioStarted=false;
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-const ADMIN_UID = "Q1Tp03lc5BRbbJUxMTDQX484CQO2";
-
-let user = null;
-let isAdmin = false;
-let projects = [];
-let currentProject = null;
-let currentId = null;
-let unsubscribe = null;
-
-// Intro
 window.addEventListener("load",()=>{
- setTimeout(()=>{
-  document.getElementById("intro")?.classList.add("hide");
- },2500);
+ setTimeout(()=>document.getElementById("intro")?.classList.add("hide"),4700);
 });
+function introSound(freq,duration=.2){
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  const ctx=new AC(),osc=ctx.createOscillator(),gain=ctx.createGain();
+  osc.type="sine";osc.frequency.value=freq;gain.gain.setValueAtTime(.055,ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);
+  osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+duration);
+  osc.onended=()=>ctx.close();
+ }catch(e){}
+}
+function startIntroAudio(){
+ if(audioStarted)return;audioStarted=true;
+ [330,440,550,660,880].forEach((f,i)=>setTimeout(()=>introSound(f),i*620));
+}
+document.addEventListener("pointerdown",startIntroAudio,{once:true});
 
-// Navigation
 function page(id){
- document.querySelectorAll(".page").forEach(p=>{
-  p.classList.remove("active");
- });
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
  document.getElementById(id).classList.add("active");
  window.scrollTo({top:0,behavior:"smooth"});
 }
-
 function selectNav(id){
- document.querySelectorAll(".nav-item").forEach(item=>{
-  item.classList.remove("selected");
- });
+ document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("selected"));
  document.getElementById(id)?.classList.add("selected");
 }
+function goHome(){page("home");selectNav("navHome")}
+const template=`<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مشروعي</title>
+<style>body{background:#101827;color:white;font-family:Arial;text-align:center;padding:40px 15px}h1{color:#8875ff}button{background:#8875ff;color:white;border:0;padding:13px 20px;border-radius:10px}</style></head>
+<body><h1>أهلاً بك!</h1><p>هذا أول مشروع لي.</p><button onclick="hello()">اضغط هنا</button>
+<script>function hello(){alert("أهلاً بك في مشروعي!") }<\/script></body></html>`;
 
-function goHome(){
- page("home");
- selectNav("navHome");
-}
-
-// Starter HTML
-const template = `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>مشروعي</title>
-<style>
-body{
- background:#101827;color:white;font-family:Arial;
- text-align:center;padding:40px 15px;
-}
-h1{color:#7187ff}
-button{
- background:#7187ff;color:white;border:0;
- padding:13px 20px;border-radius:10px;
-}
-</style>
-</head>
-<body>
-<h1>أهلاً بك!</h1>
-<p>هذا أول مشروع لي.</p>
-<button onclick="hello()">اضغط هنا</button>
-<script>
-function hello(){alert("أهلاً بك في مشروعي!");}
-<\/script>
-</body>
-</html>`;
-
-// Login
 async function login(){
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
- const msg=document.getElementById("authMessage");
-
- if(!email || !password){
-  msg.textContent="اكتب البريد وكلمة المرور.";
-  return;
- }
-
- try{
-  msg.textContent="جاري تسجيل الدخول...";
-  await auth.signInWithEmailAndPassword(email,password);
- }catch(e){
-  console.error(e);
-  msg.textContent="تعذر تسجيل الدخول: "+e.message;
- }
+ const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
+ if(!email||!password){authMessage.textContent="اكتب البريد وكلمة المرور.";return}
+ try{authMessage.textContent="جاري تسجيل الدخول...";await auth.signInWithEmailAndPassword(email,password)}
+ catch(e){console.error(e);authMessage.textContent="تعذر تسجيل الدخول: "+e.message}
 }
-
-// Register
 async function register(){
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
- const msg=document.getElementById("authMessage");
-
- if(!email || !password){
-  msg.textContent="اكتب البريد وكلمة المرور.";
-  return;
- }
- if(password.length<6){
-  msg.textContent="كلمة المرور لازم تكون 6 أحرف على الأقل.";
-  return;
- }
-
- try{
-  msg.textContent="جاري إنشاء الحساب...";
-  await auth.createUserWithEmailAndPassword(email,password);
- }catch(e){
-  console.error(e);
-  msg.textContent="تعذر إنشاء الحساب: "+e.message;
- }
+ const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
+ if(!email||!password){authMessage.textContent="اكتب البريد وكلمة المرور.";return}
+ if(password.length<6){authMessage.textContent="كلمة المرور لازم تكون 6 أحرف على الأقل.";return}
+ try{authMessage.textContent="جاري إنشاء الحساب...";await auth.createUserWithEmailAndPassword(email,password)}
+ catch(e){console.error(e);authMessage.textContent="تعذر إنشاء الحساب: "+e.message}
 }
-
-// Authentication state
+function listenProjects(){
+ let q=db.collection("projects");
+ if(!isAdmin)q=q.where("ownerId","==",user.uid);
+ unsubscribe=q.onSnapshot(s=>{
+  projects=s.docs.map(d=>({id:d.id,...d.data()}));
+  projects.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));renderProjects();
+ },e=>{console.error(e);alert("خطأ بتحميل المشاريع: "+e.message)});
+}
 auth.onAuthStateChanged(u=>{
- if(unsubscribe){
-  unsubscribe();
-  unsubscribe=null;
- }
-
+ if(PUBLIC_PROJECT_ID)return;
+ if(unsubscribe){unsubscribe();unsubscribe=null}
  user=u;
-
  if(!u){
-  projects=[];
-  currentProject=null;
-  currentId=null;
-
+  projects=[];currentProject=null;currentId=null;
   document.getElementById("authPage").style.display="block";
   document.getElementById("app").style.display="none";
   document.getElementById("logoutBtn").style.display="none";
   return;
  }
-
- isAdmin=(u.uid===ADMIN_UID);
-
+ isAdmin=u.uid===ADMIN_UID;
  document.getElementById("authPage").style.display="none";
  document.getElementById("app").style.display="block";
  document.getElementById("logoutBtn").style.display="block";
-
- document.getElementById("userInfo").textContent=
-  u.email+(isAdmin?" · مدير 👑":"");
-
- document.getElementById("homeTitle").textContent=
-  isAdmin?"لوحة الإدارة 👑":"مشاريعي 👋";
-
- document.getElementById("homeDescription").textContent=
-  isAdmin?"كل مشاريع المستخدمين تظهر هنا.":"مشاريعك المحفوظة.";
-
- goHome();
- listenProjects();
-},error=>{
- console.error("Auth state error:",error);
- document.getElementById("authMessage").textContent=
-  "خطأ في الاتصال بالمصادقة: "+error.message;
+ document.getElementById("userInfo").textContent=u.email+(isAdmin?" · مدير 👑":"");
+ document.getElementById("homeTitle").textContent=isAdmin?"لوحة الإدارة 👑":"مشاريعي 👋";
+ document.getElementById("homeDescription").textContent=isAdmin?"إدارة ومتابعة مشاريع المستخدمين.":"كل مشاريعك المحفوظة والمنشورة.";
+ goHome();listenProjects();
 });
 
-// Firestore
-function listenProjects(){
- let query=db.collection("projects");
-
- if(!isAdmin){
-  query=query.where("ownerId","==",user.uid);
- }
-
- unsubscribe=query.onSnapshot(snapshot=>{
-  projects=snapshot.docs.map(doc=>({
-   id:doc.id,
-   ...doc.data()
-  }));
-
-  projects.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-  renderProjects();
- },error=>{
-  console.error(error);
-  alert("خطأ بتحميل المشاريع: "+error.message);
- });
-}
-
-// New project
 function newProject(){
  if(!user)return;
- document.getElementById("newName").value="";
- selectNav("navCreate");
- page("create");
+ document.getElementById("newName").value="";selectNav("navCreate");page("create");
 }
-
 function createProject(){
  const name=document.getElementById("newName").value.trim();
-
- if(!name){
-  alert("اكتب اسم المشروع أولاً.");
-  return;
- }
-
- currentId=null;
- currentProject={
-  name:name,
-  html:template,
-  ownerId:user.uid,
-  ownerEmail:user.email
- };
-
+ if(!name){alert("اكتب اسم المشروع أولاً.");return}
+ currentId=null;currentProject={name,html:template,ownerId:user.uid,ownerEmail:user.email};
  document.getElementById("editorTitle").textContent=name;
  document.getElementById("code").value=template;
  document.getElementById("editorStatus").textContent="مشروع جديد غير محفوظ";
- document.getElementById("saveMessage").textContent="اكتب كودك ثم احفظ";
-
+ document.getElementById("saveMessage").textContent="اكتب كودك ثم احفظ.";
  page("editor");
 }
-
-// Render projects
+function addButton(parent,label,cls,fn){
+ const b=document.createElement("button");b.className="btn "+(cls||"");b.textContent=label;b.onclick=fn;parent.append(b);return b;
+}
 function renderProjects(){
- const list=document.getElementById("projectList");
- list.innerHTML="";
-
- if(projects.length===0){
-  list.innerHTML=`
-   <div class="empty">
-    <div class="empty-icon">📂</div>
-    <h3>ماكو مشاريع بعد</h3>
-    <p>ابدأ بإنشاء أول مشروع.</p>
-   </div>`;
-  return;
+ const list=document.getElementById("projectList");list.innerHTML="";
+ if(!projects.length){
+  list.innerHTML='<div class="empty"><div class="empty-icon">✧</div><h3>مساحتك تنتظر أول مشروع</h3><p>ابدأ مشروعك الأول وخلي فكرتك تصير حقيقة.</p></div>';return;
  }
+ projects.forEach((p,i)=>{
+  const card=document.createElement("article");card.className="project";card.style.animationDelay=(i*.045)+"s";
+  const top=document.createElement("div");top.className="project-top";
+  const icon=document.createElement("div");icon.className="project-icon";icon.textContent="⌘";
+  const info=document.createElement("div");info.style.flex="1";
+  const name=document.createElement("div");name.className="project-name";name.textContent=p.name||"مشروع بدون اسم";
+  const details=document.createElement("div");details.className="project-info";
+  details.textContent=isAdmin?"صاحب المشروع: "+(p.ownerEmail||"غير معروف"):"مشروعك المحفوظ";
+  const badges=document.createElement("div");badges.className="project-badges";
+  const state=document.createElement("span");state.className="pill "+(p.published?"public":"");state.textContent=p.published?"🌍 منشور للعامة":"🔒 خاص";
+badges.append(state);
 
- projects.forEach((p,index)=>{
-  const card=document.createElement("div");
-  card.className="project";
-  card.style.animationDelay=(index*0.06)+"s";
+info.append(name,details,badges);
+top.append(icon,info);
 
-  const top=document.createElement("div");
-  top.className="project-top";
+const actions=document.createElement("div");
+actions.className="project-actions";
 
-  const icon=document.createElement("div");
-  icon.className="project-icon";
-  icon.textContent="🌐";
+addButton(actions,"▶ تشغيل","",()=>openPreview(p.id));
 
-  const info=document.createElement("div");
-  info.style.flex="1";
-
-  const name=document.createElement("div");
-  name.className="project-name";
-  name.textContent=p.name||"مشروع بدون اسم";
-
-  const details=document.createElement("div");
-  details.className="project-info";
-  details.textContent=isAdmin
-   ?"صاحب المشروع: "+(p.ownerEmail||"غير معروف")
-   :"مشروعك المحفوظ";
-
-  info.append(name,details);
-  top.append(icon,info);
-
-  const actions=document.createElement("div");
-  actions.className="project-actions";
-
-  const run=document.createElement("button");
-  run.className="btn";
-  run.textContent="▶ تشغيل";
-  run.onclick=()=>openPreview(p.id);
-  actions.append(run);
-
-  if(isAdmin){
-   const edit=document.createElement("button");
-   edit.className="btn primary";
-   edit.textContent="✏️ تعديل";
-   edit.onclick=()=>openEditor(p.id);
-
-   const del=document.createElement("button");
-   del.className="btn danger";
-   del.textContent="🗑 حذف";
-   del.onclick=()=>deleteProject(p.id);
-
-   actions.append(edit,del);
-  }
-
-  card.append(top,actions);
-  list.append(card);
- });
+if(isAdmin){
+ addButton(actions,"✏️ تعديل","primary",()=>openEditor(p.id));
+ addButton(actions,"🗑 حذف","danger",()=>deleteProject(p.id));
 }
 
-// Admin editor
+if(p.published){
+ addButton(actions,"🔗 نسخ الرابط","success",()=>copyPublicLink(p.id));
+ addButton(actions,"🔒 إلغاء النشر","",()=>unpublishProject(p.id));
+}else{
+ addButton(actions,"🌍 نشر المشروع","primary",()=>publishProject(p.id));
+}
+
+card.append(top,actions);
+list.append(card);
+});
+}
+
+// نسخ رابط المشروع المنشور
+async function copyPublicLink(id){
+ const url=location.origin+location.pathname+"?public="+encodeURIComponent(id);
+ try{
+  await navigator.clipboard.writeText(url);
+  alert("تم نسخ رابط المشروع! 🔗");
+ }catch(e){
+  prompt("انسخ رابط المشروع:",url);
+ }
+}
+
+// نشر المشروع
+async function publishProject(id){
+ const p=projects.find(x=>x.id===id);
+ if(!p)return;
+
+ if(!confirm("هل تريد نشر هذا المشروع ليشاهده الجميع؟"))return;
+
+ try{
+  await db.collection("projects").doc(id).update({
+   published:true,
+   publishedAt:Date.now(),
+   updatedAt:Date.now()
+  });
+
+  alert("تم نشر المشروع بنجاح! 🌍");
+  copyPublicLink(id);
+ }catch(e){
+  console.error(e);
+  alert("تعذر النشر: "+e.message);
+ }
+}
+
+// إلغاء النشر
+async function unpublishProject(id){
+ const p=projects.find(x=>x.id===id);
+ if(!p)return;
+
+ if(!confirm("هل تريد إلغاء نشر المشروع؟"))return;
+
+ try{
+  await db.collection("projects").doc(id).update({
+   published:false,
+   updatedAt:Date.now()
+  });
+  alert("تم إلغاء النشر.");
+ }catch(e){
+  console.error(e);
+  alert("تعذر إلغاء النشر: "+e.message);
+ }
+}
+
+// تعديل المشروع - للمدير فقط
 function openEditor(id){
  if(!isAdmin){
   alert("التعديل متاح للمدير فقط.");
@@ -628,12 +443,12 @@ function openEditor(id){
  document.getElementById("editorTitle").textContent=p.name;
  document.getElementById("code").value=p.html||"";
  document.getElementById("editorStatus").textContent="تعديل مشروع محفوظ";
- document.getElementById("saveMessage").textContent="مشروع المستخدم";
+ document.getElementById("saveMessage").textContent="تعديل مشروع المستخدم";
 
  page("editor");
 }
 
-// Save
+// حفظ المشروع
 async function saveProject(){
  if(!currentProject||!user)return;
 
@@ -643,32 +458,30 @@ async function saveProject(){
   return;
  }
 
- currentProject.html=html;
-
  try{
   if(!currentId){
-   const projectData={
+   const data={
     name:currentProject.name,
     html:html,
     ownerId:user.uid,
     ownerEmail:user.email,
+    published:false,
     createdAt:Date.now(),
     updatedAt:Date.now()
    };
 
-   const ref=await db.collection("projects").add(projectData);
+   const ref=await db.collection("projects").add(data);
    currentId=ref.id;
-   currentProject={...projectData,id:ref.id};
+   currentProject={...data,id:ref.id};
 
-   document.getElementById("editorStatus").textContent=
-    "✓ تم حفظ المشروع في Firebase";
-   alert("تم حفظ مشروعك بنجاح!");
+   document.getElementById("editorStatus").textContent="✓ تم حفظ المشروع";
+   alert("تم حفظ المشروع بنجاح!");
    goHome();
    return;
   }
 
   if(!isAdmin){
-   alert("ما عندك صلاحية تعديل هذا المشروع.");
+   alert("ما عندك صلاحية تعديل كود المشروع المحفوظ.");
    return;
   }
 
@@ -678,7 +491,7 @@ async function saveProject(){
   });
 
   document.getElementById("editorStatus").textContent="✓ تم تحديث المشروع";
-  document.getElementById("saveMessage").textContent="✓ تم حفظ تعديلات المدير";
+  alert("تم حفظ تعديلات المشروع.");
 
  }catch(e){
   console.error(e);
@@ -686,7 +499,7 @@ async function saveProject(){
  }
 }
 
-// Preview saved project
+// معاينة مشروع محفوظ
 function openPreview(id){
  const p=projects.find(x=>x.id===id);
  if(!p)return;
@@ -699,34 +512,35 @@ function openPreview(id){
  page("run");
 }
 
-// Run editor content
+// تشغيل كود المحرر
 function runProject(){
  if(!currentProject)return;
 
- const html=document.getElementById("code").value;
-
  document.getElementById("previewName").textContent=currentProject.name;
- document.getElementById("preview").srcdoc=html;
+ document.getElementById("preview").srcdoc=
+  document.getElementById("code").value;
+
  page("run");
 }
 
-// Refresh preview
+// تحديث المعاينة
 function refreshPreview(){
- if(document.getElementById("run").classList.contains("active")){
-  if(currentProject && document.getElementById("editor").classList.contains("active")){
-   document.getElementById("preview").srcdoc=
-    document.getElementById("code").value;
-  }else if(currentProject && currentId){
-   const p=projects.find(x=>x.id===currentId);
-   if(p)document.getElementById("preview").srcdoc=p.html||"";
-  }else if(currentProject){
-   document.getElementById("preview").srcdoc=
-    document.getElementById("code").value;
-  }
+ if(!currentProject)return;
+
+ const editor=document.getElementById("editor");
+ if(editor.classList.contains("active")){
+  document.getElementById("preview").srcdoc=
+   document.getElementById("code").value;
+  return;
+ }
+
+ if(currentId){
+  const p=projects.find(x=>x.id===currentId);
+  if(p)document.getElementById("preview").srcdoc=p.html||"";
  }
 }
 
-// Delete project
+// حذف المشروع - للمدير فقط
 async function deleteProject(id){
  if(!isAdmin){
   alert("الحذف للمدير فقط.");
@@ -740,26 +554,79 @@ async function deleteProject(id){
 
  try{
   await db.collection("projects").doc(id).delete();
+  alert("تم حذف المشروع.");
  }catch(e){
   console.error(e);
   alert("تعذر الحذف: "+e.message);
  }
 }
 
-// Logout
+// عرض المشروع المنشور للزوار
+async function loadPublicProject(){
+ if(!PUBLIC_PROJECT_ID)return false;
+
+ document.getElementById("intro").classList.add("hide");
+ document.getElementById("mainHeader").style.display="none";
+ document.getElementById("authPage").style.display="none";
+ document.getElementById("app").style.display="none";
+ document.getElementById("publicPage").style.display="block";
+
+ try{
+  const doc=await db.collection("projects").doc(PUBLIC_PROJECT_ID).get();
+
+  if(!doc.exists){
+   document.getElementById("publicTitle").textContent="المشروع غير موجود";
+   document.getElementById("publicOwner").textContent="قد يكون المشروع محذوفاً.";
+   return true;
+  }
+
+  const p=doc.data();
+
+  if(!p.published){
+   document.getElementById("publicTitle").textContent="هذا المشروع غير منشور";
+   document.getElementById("publicOwner").textContent="قام صاحبه بإلغاء نشر المشروع.";
+   return true;
+  }
+
+  document.title=p.name+" - Hassan Code Studio";
+  document.getElementById("publicTitle").textContent=p.name||"مشروع منشور";
+  document.getElementById("publicOwner").textContent=
+   "بواسطة "+(p.ownerEmail||"مستخدم Hassan Code Studio");
+
+  document.getElementById("publicFrame").srcdoc=p.html||"";
+
+ }catch(e){
+  console.error(e);
+  document.getElementById("publicTitle").textContent="تعذر تحميل المشروع";
+  document.getElementById("publicOwner").textContent=e.message;
+ }
+
+ return true;
+}
+
+// تسجيل الخروج
 async function logout(){
  if(unsubscribe){
   unsubscribe();
   unsubscribe=null;
  }
+
  currentProject=null;
  currentId=null;
- await auth.signOut();
-}
-</script>
 
-<!-- Service Worker -->
-<script>
+ try{
+  await auth.signOut();
+ }catch(e){
+  alert("تعذر تسجيل الخروج: "+e.message);
+ }
+}
+
+// بدء التطبيق
+if(PUBLIC_PROJECT_ID){
+ loadPublicProject();
+}
+
+// Service Worker
 if("serviceWorker" in navigator){
  window.addEventListener("load",()=>{
   navigator.serviceWorker.register("./sw.js")
@@ -767,6 +634,5 @@ if("serviceWorker" in navigator){
  });
 }
 </script>
-
 </body>
 </html>
