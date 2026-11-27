@@ -373,6 +373,31 @@ html[data-theme="light"] #code{color:#1d1d3a}
 .public-bar p{font-size:11px;color:var(--muted);line-height:1.4}
 #publicFrame{flex:1;width:100%;min-height:0;border:0;background:#fff}
 
+/* ============ الدروس ============ */
+#lessonOv{align-items:flex-end;justify-content:center;z-index:360}
+.lesson-box{max-width:640px}
+@media(min-width:640px){#lessonOv{align-items:center;padding:16px}.lesson-box{border-radius:26px;border-bottom:1px solid var(--line2);animation:dlgIn .35s cubic-bezier(.34,1.4,.64,1)}}
+.ls-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ls-top h3{flex:1;font-size:17px}
+.ls-goal{color:var(--muted);font-size:13px;margin-bottom:12px}
+.ls-stage{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:16px;min-height:230px}
+.ls-n{font-size:11px;color:var(--purple);font-weight:700}
+.ls-stage h4{margin:4px 0 6px;font-size:16px}
+.ls-stage p{color:var(--muted);font-size:13.5px;line-height:1.9}
+.ls-code{direction:ltr;text-align:left;margin:12px 0 0;padding:12px;border-radius:12px;background:#0b0c1d;color:#9ff3ee;font:12.5px/1.7 var(--mono);white-space:pre-wrap;overflow-x:auto}
+.ls-code::after{content:"▍";color:var(--cyan);animation:blink .6s steps(1) infinite}
+.ls-bar{height:4px;background:var(--line);border-radius:4px;margin:12px 0;overflow:hidden}
+.ls-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.ls-ctl{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.ls-steps{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.ls-steps button{width:30px;height:30px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);font-size:12px;font-weight:700}
+.ls-steps button.sel{background:var(--accent);color:var(--on-accent);border:0}
+.ls-card{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card);text-align:start;margin-top:8px;transition:border-color .2s}
+.ls-card:hover{border-color:var(--purple)}
+.ls-card b{display:block}.ls-card small{color:var(--muted)}
+.ls-vid{width:100%;aspect-ratio:16/9;border:0;border-radius:14px;margin-bottom:10px}
+.tpl-less{display:inline-block;font-style:normal;margin-top:6px;font-size:11px;font-weight:700;color:var(--purple)}
+
 /* ============ الحساب والمعرض ============ */
 .ac-hero{display:flex;align-items:center;gap:16px;margin:0 0 16px;flex-wrap:wrap}
 .ac-av{width:64px;height:64px;font-size:26px;flex:0 0 auto}
@@ -597,6 +622,7 @@ html[data-theme="light"] #code{color:#1d1d3a}
    <button class="sn" data-nav="create" onclick="newProject()"><span data-i="plus"></span>مشروع جديد</button>
    <button class="sn" data-nav="explore" onclick="openExplore()"><span data-i="compass"></span>استكشف المنشورات</button>
    <button class="sn" data-nav="account" onclick="openAccount()"><span data-i="user"></span>حسابي</button>
+   <button class="sn" onclick="openLesson()"><span data-i="sparkle"></span>الدروس والشرح</button>
    <button class="sn" onclick="openCmd()"><span data-i="cmd"></span>لوحة الأوامر</button>
    <div class="side-foot"><b id="sideName">Hassan Code Studio</b><span id="sideRole">مساحة مشاريعك الإبداعية</span></div>
   </aside>
@@ -694,7 +720,7 @@ html[data-theme="light"] #code{color:#1d1d3a}
    </section>
 
    <section class="page" id="create">
-    <div class="page-head"><div><h1>مشروع جديد</h1><p>اختر قالباً للبداية ثم سمّ مشروعك.</p></div></div>
+    <div class="page-head"><div><h1>مشروع جديد</h1><p>اختر قالباً للبداية ثم سمّ مشروعك. اضغط «شرح بالفيديو» على أي قالب لتتعلمه.</p></div><button class="btn" onclick="openLesson()"><span data-i="sparkle"></span>الدروس</button></div>
     <div class="tpls" id="tplList"></div>
     <div class="panel">
      <label class="lbl" for="newName" style="margin-top:0">اسم المشروع</label>
@@ -708,6 +734,8 @@ html[data-theme="light"] #code{color:#1d1d3a}
      <button class="icon-btn" onclick="goHome()" aria-label="رجوع"><span data-i="back"></span></button>
      <div class="ed-title"><h2 id="editorTitle">محرر HTML</h2><span class="chip" id="edChip">جديد</span></div>
      <div class="ed-actions">
+      <button class="btn sm" onclick="openLesson()"><span data-i="sparkle"></span><span class="hide-s">شرح</span></button>
+      <button class="btn sm danger hide" id="edDel" onclick="deleteProject(currentId)"><span data-i="trash"></span><span class="hide-s">حذف</span></button>
       <button class="btn sm" onclick="runProject()"><span data-i="expand"></span><span class="hide-s">ملء الشاشة</span></button>
       <button class="btn primary sm" id="saveBtn" onclick="saveProject()"><span data-i="save"></span>حفظ</button>
      </div>
@@ -755,6 +783,9 @@ html[data-theme="light"] #code{color:#1d1d3a}
   <div class="cmd-foot"><span><kbd>↑↓</kbd> تنقّل</span><span><kbd>Enter</kbd> تنفيذ</span><span><kbd>Esc</kbd> إغلاق</span></div>
  </div>
 </div>
+
+<!-- الدروس -->
+<div class="overlay" id="lessonOv" onclick="if(event.target===this)closeLesson()"><div class="pub-box lesson-box" id="lessonBox"></div></div>
 
 <!-- واجهة النشر -->
 <div class="overlay" id="pubModal" onclick="if(event.target===this)closePub()"><div class="pub-box" id="pubBox"></div></div>
@@ -1210,6 +1241,7 @@ function accountMenu(anchor){
   {i:"folder",t:"مشاريعي ("+mine.length+")",fn:goHome},
   {i:"globe",t:"منشوراتي ("+pubN+")",fn:async()=>{await goHome();setFilter("public")}},
   {i:"compass",t:"استكشف المشاريع المنشورة",fn:openExplore},
+  {i:"sparkle",t:"دروس وشرح القوالب",fn:()=>openLesson()},
   {i:"plus",t:"مشروع جديد",cls:"accent",fn:newProject},
   {sep:true},
   {i:"shield",t:"الأمان وكلمة المرور",fn:()=>openAccount("sec")},
@@ -1380,7 +1412,7 @@ function cardHTML(p,i,anim){
  const second=p.published
   ?'<button class="btn sm success" data-act="share">'+ico("globe")+"صفحة النشر</button>"
   :'<button class="btn sm primary" data-act="publish">'+ico("rocket")+"نشر</button>";
- const edit=isAdmin?'<button class="btn sm" style="flex:0 0 auto" data-act="edit" aria-label="تعديل">'+ico("edit")+"</button>":"";
+ const edit='<button class="btn sm" style="flex:0 0 auto" data-act="edit" aria-label="تعديل">'+ico("edit")+"</button>";
  return '<article class="pc'+(anim?" anim":"")+'" data-id="'+esc(p.id)+'" style="--i:'+Math.min(i,12)+'">'+
   '<div class="pc-thumb" data-pid="'+esc(p.id)+'"><div class="pc-ph">'+ico("code")+"</div>"+
   '<span class="badge '+(p.published?"pub":"priv")+'">'+ico(p.published?"globe":"lock")+(p.published?"منشور":"خاص")+"</span>"+
@@ -1427,7 +1459,7 @@ function setView(v){viewMode=v;try{localStorage.setItem("hcsView",v)}catch(e){}u
 function projectMenu(id,anchor){
  const p=projects.find(x=>x.id===id);if(!p)return;
  const items=[{i:"play",t:"تشغيل بملء الشاشة",fn:()=>openPreview(id)}];
- if(isAdmin)items.push({i:"edit",t:"تعديل الكود",fn:()=>openEditor(id)});
+ items.push({i:"edit",t:"تعديل الكود",fn:()=>openEditor(id)},{i:"sparkle",t:"إعادة تسمية",fn:()=>renameProject(id)},{i:"copy",t:"نسخ المشروع",fn:()=>duplicateProject(id)});
  if(p.published){
   items.push({sep:true},{i:"globe",t:"صفحة النشر",cls:"success",fn:()=>openPublishPage(id)},{i:"link",t:"نسخ الرابط",fn:()=>copyPublicLink(id)});
   if(navigator.share)items.push({i:"share",t:"مشاركة الرابط",fn:()=>sharePublic(id)});
@@ -1435,7 +1467,7 @@ function projectMenu(id,anchor){
  }else{
   items.push({sep:true},{i:"rocket",t:"نشر المشروع",cls:"accent",fn:()=>publishProject(id)});
  }
- if(isAdmin)items.push({sep:true},{i:"trash",t:"حذف المشروع",cls:"danger",fn:()=>deleteProject(id)});
+ items.push({sep:true},{i:"trash",t:"حذف المشروع",cls:"danger",fn:()=>deleteProject(id)});
  openMenu(anchor,items,"<b>"+esc(p.name||"مشروع")+"</b>"+(p.published?"🌍 منشور للعامة":"🔒 خاص"));
 }
 
@@ -1565,14 +1597,192 @@ b.onclick=()=>{
 };
 <\/script>
 </body>
+</html>`},
+{id:"portfolio",name:"معرض أعمال",desc:"اعرض مشاريعك ببطاقات",html:`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>معرض أعمالي</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial,sans-serif;background:#0d0f24;color:#f2f1ff}
+header{text-align:center;padding:56px 20px 24px}
+.av{width:88px;height:88px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;font-size:38px;font-weight:800;color:#0d0f24;background:linear-gradient(135deg,#a58aff,#42e4dc)}
+h1{margin:0 0 6px}header p{margin:0;color:#a9a8c9}
+.grid{max-width:960px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.w{background:#17193a;border:1px solid #2b2d57;border-radius:18px;overflow:hidden;transition:transform .2s}
+.w:hover{transform:translateY(-6px)}
+.im{height:130px;display:grid;place-items:center;font-size:44px}
+.tx{padding:14px}.tx h3{margin:0 0 4px}.tx p{margin:0;color:#a9a8c9;font-size:14px}
+footer{text-align:center;padding:30px;color:#a9a8c9}
+footer a{color:#42e4dc}
+</style>
+</head>
+<body>
+<header><div class="av">ح</div><h1>اسمك هنا</h1><p>مصمم ومطوّر مواقع</p></header>
+<section class="grid">
+ <article class="w"><div class="im" style="background:#3b2f7a">🛒</div><div class="tx"><h3>متجر إلكتروني</h3><p>وصف مختصر للمشروع.</p></div></article>
+ <article class="w"><div class="im" style="background:#175c62">📱</div><div class="tx"><h3>تطبيق جوال</h3><p>وصف مختصر للمشروع.</p></div></article>
+ <article class="w"><div class="im" style="background:#6b2f55">🎨</div><div class="tx"><h3>هوية بصرية</h3><p>وصف مختصر للمشروع.</p></div></article>
+</section>
+<footer>للتواصل: <a href="mailto:you@example.com">you@example.com</a></footer>
+</body>
+</html>`},
+{id:"resume",name:"سيرة ذاتية",desc:"قابلة للطباعة PDF",html:`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>سيرتي الذاتية</title>
+<style>
+body{margin:0;background:#eef0f7;font-family:system-ui,Arial,sans-serif;color:#1c1d3a}
+.cv{max-width:780px;margin:24px auto;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px #0002}
+.top{padding:30px;background:linear-gradient(120deg,#5b43d6,#18a9a0);color:#fff}
+.top h1{margin:0}.top p{margin:4px 0 0;opacity:.9}
+.body{padding:24px 30px;display:grid;gap:20px}
+h2{font-size:16px;color:#5b43d6;border-bottom:2px solid #e4e1fb;padding-bottom:6px;margin:0 0 10px}
+.sk{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}.sk span{width:90px}
+.bar{flex:1;height:8px;border-radius:8px;background:#e8e8f4;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#5b43d6,#18a9a0)}
+.it{margin-bottom:10px}.it b{display:block}.it small{color:#6b6c8d}
+button{margin:0 30px 24px;padding:10px 18px;border:0;border-radius:10px;background:#5b43d6;color:#fff;font:inherit;cursor:pointer}
+@media print{button{display:none}body{background:#fff}.cv{box-shadow:none;margin:0}}
+</style>
+</head>
+<body>
+<div class="cv">
+ <div class="top"><h1>اسمك الكامل</h1><p>المسمى الوظيفي · المدينة · you@example.com</p></div>
+ <div class="body">
+  <section><h2>نبذة</h2><p>اكتب هنا فقرة قصيرة تعرّف بك وبأهم ما تتقنه.</p></section>
+  <section><h2>المهارات</h2>
+   <div class="sk"><span>HTML</span><div class="bar"><i style="width:90%"></i></div></div>
+   <div class="sk"><span>CSS</span><div class="bar"><i style="width:80%"></i></div></div>
+   <div class="sk"><span>JavaScript</span><div class="bar"><i style="width:65%"></i></div></div>
+  </section>
+  <section><h2>الخبرات</h2>
+   <div class="it"><b>مطوّر ويب</b><small>اسم الشركة · 2023 - الآن</small></div>
+   <div class="it"><b>متدرب</b><small>اسم الشركة · 2022 - 2023</small></div>
+  </section>
+  <section><h2>التعليم</h2>
+   <div class="it"><b>بكالوريوس علوم الحاسب</b><small>اسم الجامعة · 2022</small></div>
+  </section>
+ </div>
+ <button onclick="window.print()">🖨 طباعة / حفظ PDF</button>
+</div>
+</body>
+</html>`},
+{id:"calc",name:"آلة حاسبة",desc:"تعمل فعلاً بجافاسكربت",html:`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>آلة حاسبة</title>
+<style>
+body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui,Arial,sans-serif;background:#0d0f24}
+.c{width:300px;padding:16px;border-radius:24px;background:#17193a;box-shadow:0 20px 60px #0008}
+#d{height:70px;display:flex;align-items:flex-end;direction:ltr;font-size:36px;color:#fff;padding:8px 6px;overflow:hidden}
+.k{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+button{height:60px;border:0;border-radius:16px;font-size:22px;background:#262850;color:#fff;cursor:pointer}
+button:active{transform:scale(.94)}
+.o{background:#6c4df0}.e{grid-column:1/-1;background:linear-gradient(135deg,#a58aff,#42e4dc);color:#0d0f24}.x{background:#ff718c;color:#1a0610}
+</style>
+</head>
+<body>
+<div class="c">
+ <div id="d">0</div>
+ <div class="k" id="k">
+  <button data-v="7">7</button><button data-v="8">8</button><button data-v="9">9</button><button class="o" data-v="÷">÷</button>
+  <button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button><button class="o" data-v="×">×</button>
+  <button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button class="o" data-v="-">-</button>
+  <button data-v="0">0</button><button data-v=".">.</button><button class="x" data-v="C">C</button><button class="o" data-v="+">+</button>
+  <button class="e" data-v="=">=</button>
+ </div>
+</div>
+<script>
+let a="",op="",b="",fresh=false;
+const d=document.getElementById("d");
+function show(){d.textContent=(a+" "+op+" "+b).trim()||"0"}
+function calc(){
+ const x=parseFloat(a),y=parseFloat(b);
+ if(isNaN(x)||isNaN(y)||!op)return;
+ let r;
+ if(op==="+")r=x+y;else if(op==="-")r=x-y;else if(op==="×")r=x*y;else r=y===0?"خطأ":x/y;
+ a=String(typeof r==="number"?+r.toFixed(8):r);op="";b="";fresh=true;
+}
+document.getElementById("k").onclick=e=>{
+ const v=e.target.dataset.v;if(!v)return;
+ if(v==="C"){a=op=b="";}
+ else if(v==="="){calc();}
+ else if("+-×÷".includes(v)){if(a&&a!=="خطأ"&&!op){op=v;fresh=false}}
+ else if(!op){if(fresh||a==="خطأ"){a="";fresh=false}a+=v}
+ else b+=v;
+ show();
+};
+<\/script>
+</body>
+</html>`},
+{id:"memory",name:"لعبة الذاكرة",desc:"اكتشف الأزواج المتطابقة",html:`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لعبة الذاكرة</title>
+<style>
+body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui,Arial,sans-serif;background:#0f1030;color:#fff;text-align:center;user-select:none}
+h1{margin:0 0 4px}#m{color:#ffd477;margin:0 0 14px;min-height:24px}
+.g{display:grid;grid-template-columns:repeat(4,70px);gap:10px;justify-content:center}
+.c{width:70px;height:70px;border:0;border-radius:14px;font-size:30px;background:#262850;color:#8d8fc4;cursor:pointer;transition:transform .15s}
+.c.on{background:#6c4df0;color:#fff;transform:rotateY(0)}
+.c.ok{background:#1f8f66;color:#fff}
+#r{margin-top:16px;padding:10px 20px;border:0;border-radius:12px;background:linear-gradient(120deg,#a58aff,#42e4dc);color:#0f1030;font:700 15px inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<div>
+ <h1>لعبة الذاكرة 🧠</h1>
+ <p id="m">الحركات: 0</p>
+ <div class="g" id="g"></div>
+ <button id="r">إعادة اللعب</button>
+</div>
+<script>
+const em=["🍎","🚀","🎧","🌙","⚡","🎯","🐱","🔥"];
+let first=null,lock=false,moves=0,pairs=0;
+const g=document.getElementById("g"),m=document.getElementById("m");
+function start(){
+ g.innerHTML="";moves=0;pairs=0;first=null;lock=false;m.textContent="الحركات: 0";
+ [...em,...em].sort(()=>Math.random()-.5).forEach(e=>{
+  const c=document.createElement("button");
+  c.className="c";c.dataset.e=e;c.textContent="؟";g.append(c);
+ });
+}
+g.onclick=ev=>{
+ const c=ev.target;
+ if(!c.classList.contains("c")||lock||c.classList.contains("on")||c.classList.contains("ok"))return;
+ c.classList.add("on");c.textContent=c.dataset.e;
+ if(!first){first=c;return}
+ moves++;m.textContent="الحركات: "+moves;
+ if(first.dataset.e===c.dataset.e){
+  first.className="c ok";c.className="c ok";first=null;pairs++;
+  if(pairs===8)m.textContent="🎉 فزت في "+moves+" حركة!";
+ }else{
+  lock=true;
+  setTimeout(()=>{[first,c].forEach(x=>{x.classList.remove("on");x.textContent="؟"});first=null;lock=false},800);
+ }
+};
+document.getElementById("r").onclick=start;
+start();
+<\/script>
+</body>
 </html>`}
 ];
 let tplSel="blank";
 function renderTemplates(){
- $("tplList").innerHTML=TEMPLATES.map(t=>'<button class="tpl'+(t.id===tplSel?" selected":"")+'" data-t="'+t.id+'" type="button"><div class="pc-thumb" data-tid="'+t.id+'"><div class="pc-ph">'+ico("code")+'</div></div><span class="tpl-ck">'+ico("check")+'</span><div class="tpl-b"><b>'+t.name+"</b><span>"+t.desc+"</span></div></button>").join("");
+ $("tplList").innerHTML=TEMPLATES.map(t=>'<button class="tpl'+(t.id===tplSel?" selected":"")+'" data-t="'+t.id+'" type="button"><div class="pc-thumb" data-tid="'+t.id+'"><div class="pc-ph">'+ico("code")+'</div></div><span class="tpl-ck">'+ico("check")+'</span><div class="tpl-b"><b>'+t.name+"</b><span>"+t.desc+'</span><em class="tpl-less" data-lesson="'+t.id+'">▶ شرح بالفيديو</em></div></button>').join("");
  document.querySelectorAll("#tplList .pc-thumb").forEach(el=>{ro.observe(el);io.observe(el)});
 }
 $("tplList").addEventListener("click",e=>{
+ const ls=e.target.closest("[data-lesson]");if(ls){openLesson(ls.dataset.lesson);return}
  const b=e.target.closest(".tpl");if(!b)return;
  tplSel=b.dataset.t;document.querySelectorAll("#tplList .tpl").forEach(x=>x.classList.toggle("selected",x===b));
 });
@@ -1589,7 +1799,7 @@ function createProject(){
 const CODE=$("code");
 let liveT=null;
 function setChip(){
- const c=$("edChip");
+ const c=$("edChip");$("edDel").classList.toggle("hide",!currentId);
  if(dirty){c.textContent="● غير محفوظ";c.className="chip warn"}
  else if(currentId){c.textContent="✓ محفوظ";c.className="chip ok"}
  else{c.textContent="مشروع جديد";c.className="chip"}
@@ -1646,8 +1856,8 @@ $("quick").innerHTML=QUICK.map(q=>'<button type="button">'+esc(q)+"</button>").j
 $("quick").addEventListener("click",e=>{const b=e.target.closest("button");if(b)insertTxt(b.textContent)});
 
 function openEditor(id){
- if(!isAdmin){toast("التعديل متاح للمدير فقط.","error");return}
  const p=projects.find(x=>x.id===id);if(!p)return;
+ if(!isAdmin&&p.ownerId!==user.uid){toast("لا تملك هذا المشروع.","error");return}
  currentId=id;currentProject={...p};
  openEditorState(p.name||"مشروع",p.html||"");
 }
@@ -1662,8 +1872,6 @@ async function saveProject(){
    const ref=await db.collection("projects").add(data);
    currentId=ref.id;currentProject={...data,id:ref.id};dirty=false;setChip();
    toast("تم حفظ المشروع بنجاح","success");goHome();
-  }else if(!isAdmin){
-   toast("ما عندك صلاحية تعديل كود المشروع المحفوظ.","error");
   }else{
    await db.collection("projects").doc(currentId).update({html:html,updatedAt:Date.now()});
    dirty=false;setChip();toast("تم حفظ التعديلات","success");
@@ -1677,11 +1885,45 @@ function openPreview(id){
 }
 function runProject(){if(currentProject)openPlayer(CODE.value)}
 async function deleteProject(id){
- if(!isAdmin){toast("الحذف للمدير فقط.","error");return}
  const p=projects.find(x=>x.id===id);if(!p)return;
+ if(!isAdmin&&p.ownerId!==user.uid){toast("لا تملك هذا المشروع.","error");return}
  if(!await confirmDialog({title:"حذف المشروع",text:"سيتم حذف «"+(p.name||"")+"» نهائياً ولا يمكن التراجع.",ok:"حذف",danger:true}))return;
- try{await db.collection("projects").doc(id).delete();toast("تم حذف المشروع.","success")}
+ try{
+  await db.collection("projects").doc(id).delete();toast("تم حذف المشروع.","success");
+  if(currentId===id){currentId=null;currentProject=null;dirty=false;if($("editor").classList.contains("active")){page("home");setNav("home")}}
+ }
  catch(e){console.error(e);toast("تعذر الحذف: "+e.message,"error")}
+}
+
+/* ============ إعادة التسمية والنسخ ============ */
+function askName(title,val){
+ return new Promise(res=>{
+  const ov=$("dlgOv"),ok=$("dlgOk"),cn=$("dlgCancel"),tx=$("dlgText");
+  $("dlgTitle").textContent=title;tx.innerHTML='<div class="inp"><input id="dlgIn" maxlength="50" autocomplete="off"></div>';
+  const inp=$("dlgIn");inp.value=val||"";
+  ok.textContent="حفظ";cn.textContent="إلغاء";ok.className="btn primary";
+  const done=v=>{ov.classList.remove("open");ok.onclick=cn.onclick=ov.onclick=null;tx.textContent="";res(v)};
+  ok.onclick=()=>done(inp.value.trim()||null);cn.onclick=()=>done(null);ov.onclick=e=>{if(e.target===ov)done(null)};
+  inp.onkeydown=e=>{if(e.key==="Enter")ok.click()};
+  ov.classList.add("open");setTimeout(()=>{inp.focus();inp.select()},30);
+ });
+}
+async function renameProject(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;
+ const n=await askName("إعادة تسمية المشروع",p.name);
+ if(!n||n===p.name)return;
+ try{
+  await db.collection("projects").doc(id).update({name:n,updatedAt:Date.now()});
+  if(currentId===id){currentProject.name=n;$("editorTitle").textContent=n}
+  toast("تمت إعادة التسمية","success");
+ }catch(e){console.error(e);toast("تعذرت إعادة التسمية: "+e.message,"error")}
+}
+async function duplicateProject(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;
+ try{
+  await db.collection("projects").add({name:(p.name||"مشروع")+" (نسخة)",html:p.html||"",ownerId:user.uid,ownerEmail:user.email,published:false,createdAt:Date.now(),updatedAt:Date.now()});
+  toast("تم نسخ المشروع","success");
+ }catch(e){console.error(e);toast("تعذر النسخ: "+e.message,"error")}
 }
 
 /* ============ المشغّل بملء الشاشة ============ */
@@ -1960,6 +2202,184 @@ async function sharePublicPage(){
 }
 function pubFullscreen(){const f=$("publicFrame");(f.requestFullscreen||f.webkitRequestFullscreen||function(){}).call(f)}
 
+/* ============ الدروس والشرح التفاعلي ============ */
+const LESSONS={
+blank:{lv:"مبتدئ",min:5,goal:"تفهم هيكل أي صفحة ويب",steps:[
+{t:"ما هو ملف HTML؟",d:"كل موقع في العالم يبدأ بملف HTML. هو نص عادي يشرح للمتصفح ما يعرضه: عنوان، فقرة، صورة... والمتصفح يقرأه ويرسمه على الشاشة.",c:`<h1>مرحباً</h1>
+<p>أنا أول صفحة لي</p>`},
+{t:"الهيكل الأساسي",d:"السطر الأول DOCTYPE يخبر المتصفح أن الصفحة HTML5. وسم html يحيط بكل شيء ونكتب فيه lang=ar وdir=rtl لأن اللغة عربية. بداخله head للإعدادات وbody للمحتوى المرئي.",c:`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>...</head>
+<body>...</body>
+</html>`},
+{t:"ما داخل head",d:"meta charset يضمن ظهور الحروف العربية صحيحة. meta viewport يجعل الصفحة تناسب شاشة الجوال. وسم title هو الاسم الذي يظهر في تبويب المتصفح.",c:`<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مشروعي</title>`},
+{t:"التنسيق بـ CSS",d:"وسم style يحتوي قواعد الشكل. كل قاعدة: محدد (من سننسّق) ثم أقواس فيها خصائص. display:grid مع place-items:center يضع المحتوى في منتصف الشاشة أفقياً وعمودياً.",c:`body{
+  display:grid;
+  place-items:center;
+  background:#101827;
+  color:#fff;
+}`},
+{t:"جرّب بنفسك",d:"غيّر لون العنوان h1 ثم غيّر النص داخل p وشاهد المعاينة الحية تتغير فوراً. أضف h2 وفقرة تحته. وتذكر الضغط على «حفظ» حتى لا تضيع تعديلاتك.",c:`h1{color:tomato}`}]},
+card:{lv:"مبتدئ",min:8,goal:"تبني صفحة شخصية أنيقة تضعها في بايو حساباتك",steps:[
+{t:"فكرة البطاقة",d:"البطاقة صندوق واحد في منتصف الشاشة يجمع صورتك واسمك ونبذة قصيرة وروابطك. نبنيها بعنصر div له حواف مدوّرة وخلفية أفتح قليلاً من خلفية الصفحة ليبرز.",c:`<div class="card">
+  ...
+</div>`},
+{t:"الصورة الرمزية",d:"الدائرة تُصنع بعنصر مربع مع border-radius:50%. نملؤها بحرف من اسمك وبخلفية متدرجة linear-gradient، فلا نحتاج صورة حقيقية ولا رفع ملفات.",c:`.av{
+  width:84px;height:84px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#a58aff,#42e4dc);
+}`},
+{t:"الاسم والنبذة",d:"وسم h1 للاسم وp للنبذة. اجعل النبذة جملة واحدة واضحة: من أنت وماذا تفعل. استبدل النص الموجود بنصك أنت.",c:`<h1>حسن</h1>
+<p>مطوّر ويب وصانع محتوى</p>`},
+{t:"أزرار الروابط",d:"كل رابط وسم a داخله href فيه العنوان، ونعطيه شكل زر بـ padding وborder-radius. غيّر href إلى حساباتك الحقيقية، وانسخ سطر a لإضافة رابط جديد.",c:`<a href="https://x.com/اسمك">تويتر</a>
+<a href="https://instagram.com/اسمك">انستغرام</a>`},
+{t:"حركة عند اللمس",d:"transition يجعل التغيير ناعماً، و:hover يُطبَّق عند مرور المؤشر أو لمس الزر. نرفع الزر قليلاً بـ translateY(-3px) ليشعر الزائر أنه حي.",c:`a{transition:.2s}
+a:hover{
+  transform:translateY(-3px);
+}`}]},
+landing:{lv:"متوسط",min:10,goal:"تبني صفحة تعرض فكرتك وتقنع الزائر بالضغط على زر",steps:[
+{t:"تشريح صفحة الهبوط",d:"أي صفحة هبوط ناجحة فيها ثلاثة أجزاء: ترويسة كبيرة (Hero) تقول ما الفكرة، ثم مميزات تشرح لماذا هي مفيدة، ثم زر دعوة للإجراء (CTA).",c:`<header>Hero</header>
+<section>المميزات</section>
+<a class="cta">ابدأ الآن</a>`},
+{t:"الترويسة الكبيرة",d:"نكبّر العنوان بـ font-size مع clamp ليتكيف مع الشاشة. clamp(28px,6vw,52px) تعني: لا أصغر من 28 ولا أكبر من 52، وبينهما يتبع عرض الشاشة.",c:`h1{font-size:clamp(28px,6vw,52px)}`},
+{t:"شبكة المميزات",d:"grid مع repeat(auto-fit,minmax(200px,1fr)) توزع البطاقات تلقائياً: عدة بطاقات في سطر على الكمبيوتر وواحدة على الجوال، دون كتابة media query.",c:`.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+}`},
+{t:"زر الدعوة",d:"الزر الجيد كبير وواضح وبلون يتميز عن الصفحة. نستخدم وسم a ليأخذ الزائر إلى رابط، وهنا href بقيمة #contact ينزل بالصفحة إلى قسم التواصل.",c:`<a class="cta" href="#contact">ابدأ الآن</a>`},
+{t:"التجاوب مع الجوال",d:"أكثر زوارك يفتحون من الجوال. جرّب تبويب «المعاينة» وتأكد أن النص مقروء وأن الأزرار كبيرة بما يكفي للمس (حوالي 44px ارتفاعاً).",c:`@media(max-width:600px){
+  .cta{width:100%}
+}`}]},
+game:{lv:"متوسط",min:12,goal:"تفهم كيف تتفاعل الصفحة مع المستخدم باستخدام جافاسكربت",steps:[
+{t:"فكرة اللعبة",d:"اضغط الزر أكبر عدد ممكن من المرات خلال 10 ثوانٍ. في هذه اللعبة الصغيرة ثلاثة أشياء أساسية في أي برنامج: حالة (متغيرات)، وحدث (ضغطة)، ومؤقت.",c:""},
+{t:"المتغيرات",d:"المتغير صندوق نحفظ فيه قيمة. n لعدد النقرات، وleft للثواني المتبقية، وtimer لمعرّف المؤقت، وقيمته null تعني أنه لم يبدأ بعد.",c:`let n=0,left=0,timer=null;`},
+{t:"ربط الصفحة بالكود",d:"getElementById يجلب عنصراً من الصفحة عن طريق id الخاص به، فنستطيع تغيير نصه من الكود. نجلب عنصر النتيجة s والزر b ونص المؤقت t.",c:`const s=document.getElementById("s");
+s.textContent=n; // يغيّر الرقم على الشاشة`},
+{t:"حدث الضغط",d:"b.onclick تعني: كلما ضغط اللاعب الزر نفّذ هذه الدالة. أول ضغطة تبدأ العدّ التنازلي، وكل ضغطة بعدها تزيد n بواحد وتحدّث الرقم.",c:`b.onclick=()=>{
+  n++;
+  s.textContent=n;
+};`},
+{t:"المؤقت",d:"setInterval ينفّذ دالة كل 1000 ملّي ثانية أي كل ثانية. ننقص left ونعرضها، وعندما تصل إلى صفر نوقف المؤقت بـ clearInterval ونعرض النتيجة.",c:`timer=setInterval(()=>{
+  left--;
+  if(left<=0){
+    clearInterval(timer);
+  }
+},1000);`},
+{t:"تطويرات",d:"غيّر 10 إلى 20 لتطول اللعبة، أو أضف متغير best لحفظ أعلى نتيجة خلال الجلسة، أو غيّر لون الزر عند كل نقرة.",c:`let best=0;
+if(n>best)best=n;`}]},
+portfolio:{lv:"مبتدئ",min:8,goal:"تعرض أعمالك في صفحة احترافية تناسب أي مهنة إبداعية",steps:[
+{t:"الفكرة والهيكل",d:"المعرض يتكون من ترويسة فيها صورتك واسمك، وشبكة من بطاقات الأعمال، وتذييل فيه طريقة التواصل. كل عمل بطاقة مستقلة تستطيع تكرارها.",c:`<header>الاسم</header>
+<section class="grid">بطاقات</section>
+<footer>تواصل</footer>`},
+{t:"بطاقة العمل",d:"كل بطاقة وسم article فيه صورة أو أيقونة وعنوان ووصف. لتضيف عملاً جديداً انسخ وسم article كاملاً والصقه داخل section ثم غيّر النص.",c:`<article class="w">
+  <div class="im">🛒</div>
+  <h3>متجر إلكتروني</h3>
+</article>`},
+{t:"الشبكة المتجاوبة",d:"auto-fit مع minmax توزع الأعمال حسب عرض الشاشة تلقائياً، وgap يترك مسافة منتظمة بينها.",c:`grid-template-columns:
+  repeat(auto-fit,minmax(240px,1fr));`},
+{t:"تأثير الرفع",d:":hover مع transform يرفع البطاقة عند اللمس، وtransition يجعل الحركة ناعمة. تفاصيل صغيرة كهذه تعطي انطباع الاحتراف.",c:`.w{transition:transform .2s}
+.w:hover{transform:translateY(-6px)}`},
+{t:"خصّصها",d:"بدّل الحرف في الدائرة بأول حرف من اسمك، وغيّر الإيموجي والألوان بما يناسب أعمالك، وضع بريدك الحقيقي داخل mailto.",c:`<a href="mailto:you@example.com">`}]},
+resume:{lv:"مبتدئ",min:8,goal:"تكتب سيرتك الذاتية بصفحة تستطيع طباعتها PDF",steps:[
+{t:"أقسام السيرة",d:"السيرة الجيدة فيها: نبذة، مهارات، خبرات، تعليم. عنوان كل قسم h2 وتحته محتواه، فيستطيع مدير التوظيف المرور عليها بعينه سريعاً.",c:`<h2>المهارات</h2>
+<div class="sk">...</div>`},
+{t:"أشرطة المهارات",d:"الشريط عنصر خارجي رمادي وبداخله عنصر ملوّن عرضه نسبة مئوية. غيّر width لتغيّر مستوى المهارة: 90% يعني متقدماً جداً.",c:`<div class="bar"><i style="width:90%"></i></div>`},
+{t:"الخبرات والتعليم",d:"اكتب كل خبرة في عنصر مستقل: المسمى بخط عريض ثم الجهة والمدة بخط أصغر. رتّبها من الأحدث إلى الأقدم.",c:`<div class="it">
+  <b>مطوّر ويب</b>
+  <small>شركة ... · 2023 - الآن</small>
+</div>`},
+{t:"الطباعة PDF",d:"زر الطباعة يستدعي window.print() الذي يفتح نافذة الطباعة، ومنها اختر حفظ كـ PDF. وبقاعدة media print نخفي الزر ونزيل الظلال ليظهر الملف نظيفاً.",c:`<button onclick="window.print()">طباعة</button>
+@media print{button{display:none}}`},
+{t:"نصائح",d:"اجعلها صفحة واحدة، واكتب إنجازات بأرقام (مثلاً: زدت المبيعات 30%) بدل عبارات عامة، واحذف أي معلومة لا تخدم الوظيفة المطلوبة.",c:""}]},
+calc:{lv:"متوسط",min:12,goal:"تبني آلة حاسبة تعمل بالمنطق البرمجي دون أي مكتبة",steps:[
+{t:"الفكرة",d:"نحتاج ثلاثة متغيرات: a الرقم الأول، وop العملية، وb الرقم الثاني. كل ضغطة زر تعدّل أحدها ثم نعرضها على الشاشة.",c:`let a="",op="",b="";`},
+{t:"الأزرار وdataset",d:"كل زر يحمل قيمته في data-v. بدل ربط حدث لكل زر نربط حدثاً واحداً على الحاوية ونقرأ e.target.dataset.v لنعرف أي زر ضُغط.",c:`<button data-v="7">7</button>
+container.onclick=e=>{
+  const v=e.target.dataset.v;
+};`},
+{t:"تجميع الأرقام",d:"إذا لم تُختر عملية بعد فالرقم يُضاف إلى a، وإذا اختيرت عملية يُضاف إلى b. هكذا نبني أرقاماً من عدة خانات مثل 128.",c:`if(!op) a+=v; else b+=v;`},
+{t:"الحساب",d:"parseFloat يحوّل النص إلى رقم، ثم ننفّذ العملية المختارة. انتبه لحالة القسمة على صفر: نعرض كلمة خطأ بدل نتيجة غير منطقية.",c:`const x=parseFloat(a),y=parseFloat(b);
+r = op==="+" ? x+y : x-y;`},
+{t:"تطويرات",d:"أضف زراً لمسح آخر خانة، أو زر النسبة المئوية، أو دعماً للوحة المفاتيح عبر document.onkeydown.",c:`document.onkeydown=e=>{
+  console.log(e.key);
+};`}]},
+memory:{lv:"متوسط",min:12,goal:"تتعلم المصفوفات والخلط العشوائي والتحقق من التطابق",steps:[
+{t:"الفكرة",d:"16 بطاقة فيها 8 أزواج من الإيموجي مقلوبة. تفتح بطاقتين: إن تطابقتا بقيتا مفتوحتين وإلا تنقلبان بعد لحظة. تفوز عند اكتشاف كل الأزواج.",c:""},
+{t:"مصفوفة الإيموجي",d:"نضع الإيموجي في مصفوفة ثم ننسخها مرتين بعلامة النقاط الثلاث (spread) لنحصل على الأزواج.",c:`const em=["🍎","🚀","🎧","🌙","⚡","🎯","🐱","🔥"];
+const all=[...em,...em]; // 16`},
+{t:"الخلط",d:"sort مع Math.random()-.5 تعطي ترتيباً عشوائياً في كل مرة، فتتغير أماكن البطاقات مع كل لعبة جديدة.",c:`all.sort(()=>Math.random()-.5);`},
+{t:"فحص التطابق",d:"نحفظ أول بطاقة في المتغير first. عند فتح الثانية نقارن data-e الخاص بهما: إن تساويا فهذا تطابق.",c:`if(first.dataset.e===c.dataset.e){
+  // تطابق ✓
+}`},
+{t:"الانتظار قبل القلب",d:"setTimeout ينفّذ شيئاً بعد مدة. نترك البطاقتين مكشوفتين 800 ملّي ثانية ليتذكرهما اللاعب ثم نقلبهما، ومتغير lock يمنع فتح بطاقة ثالثة خلال ذلك.",c:`lock=true;
+setTimeout(()=>{
+  lock=false;
+},800);`},
+{t:"تطويرات",d:"زد الأزواج إلى 12، أو أضف عدّاد وقت، أو غيّر الإيموجي إلى حروف إنجليزية لتعليم الأطفال.",c:""}]}
+};
+const LICON={blank:"📄",card:"🪪",landing:"🚀",game:"🎮",portfolio:"🖼️",resume:"📑",calc:"🧮",memory:"🧠"};
+const LS={id:null,i:0,play:false,voice:false,typing:false,typeT:null,nextT:null};
+function lsStop(){clearInterval(LS.typeT);clearTimeout(LS.nextT);LS.typing=false;if("speechSynthesis" in window)speechSynthesis.cancel()}
+function closeLesson(){lsStop();LS.play=false;$("lessonOv").classList.remove("open")}
+function openLesson(id){
+ lsStop();LS.play=false;
+ const box=$("lessonBox");
+ if(!id||!LESSONS[id]){
+  box.innerHTML='<div class="ls-top"><h3>📚 الدروس والشرح</h3><button class="icon-btn sm" onclick="closeLesson()" aria-label="إغلاق">'+ico("x")+'</button></div><p class="ls-goal">اختر قالباً لتشاهد شرحه خطوة بخطوة بالصوت والكود.</p>'+
+   TEMPLATES.filter(t=>LESSONS[t.id]).map(t=>{const L=LESSONS[t.id];return '<button class="ls-card" onclick="openLesson(\''+t.id+'\')"><span style="font-size:26px">'+(LICON[t.id]||"📄")+'</span><div><b>'+esc(t.name)+'</b><small>'+L.lv+' · '+L.min+' دقائق · '+L.steps.length+' خطوات</small></div></button>'}).join("");
+  $("lessonOv").classList.add("open");return;
+ }
+ LS.id=id;const L=LESSONS[id],t=TEMPLATES.find(x=>x.id===id);
+ box.innerHTML=
+  '<div class="ls-top"><button class="icon-btn sm" onclick="openLesson()" aria-label="كل الدروس">'+ico("list")+'</button><h3>'+(LICON[id]||"")+" "+esc(t.name)+'</h3><button class="icon-btn sm" onclick="closeLesson()" aria-label="إغلاق">'+ico("x")+"</button></div>"+
+  '<p class="ls-goal">'+esc(L.goal)+" · "+L.lv+" · "+L.min+" دقائق</p>"+
+  (L.yt?'<iframe class="ls-vid" src="https://www.youtube.com/embed/'+esc(L.yt)+'" allowfullscreen loading="lazy" title="فيديو الشرح"></iframe>':"")+
+  '<div class="ls-stage"><div class="ls-n" id="lsN"></div><h4 id="lsT"></h4><p id="lsD"></p><pre class="ls-code" id="lsC"></pre></div>'+
+  '<div class="ls-bar"><i id="lsBar"></i></div>'+
+  '<div class="ls-ctl"><button class="btn sm" onclick="lsGo(-1)">→ السابق</button><button class="btn sm primary" id="lsPlay" onclick="lsToggle()"></button><button class="btn sm" onclick="lsGo(1)">التالي ←</button><button class="btn sm" id="lsVoice" onclick="lsVoice()"></button><button class="btn sm" onclick="lsCopy()">'+ico("copy")+"نسخ الكود</button></div>"+
+  '<div class="ls-steps">'+L.steps.map((_,i)=>'<button onclick="lsShow('+i+')">'+(i+1)+"</button>").join("")+"</div>"+
+  '<button class="btn primary block" onclick="useTpl(\''+id+'\')">'+ico("rocket")+"ابدأ بهذا القالب</button>";
+ $("lessonOv").classList.add("open");
+ LS.play=true;lsShow(0);lsPlayBtn();lsVoiceBtn();
+}
+function lsShow(i){
+ const L=LESSONS[LS.id],st=L&&L.steps[i];if(!st)return;
+ lsStop();LS.i=i;
+ $("lsN").textContent="الخطوة "+(i+1)+" من "+L.steps.length;$("lsT").textContent=st.t;$("lsD").textContent=st.d;
+ $("lsBar").style.width=((i+1)/L.steps.length*100)+"%";
+ document.querySelectorAll("#lessonBox .ls-steps button").forEach((b,k)=>b.classList.toggle("sel",k===i));
+ const pre=$("lsC"),c=st.c||"";pre.style.display=c?"":"none";pre.textContent="";
+ if(LS.voice&&"speechSynthesis" in window){const u=new SpeechSynthesisUtterance(st.t+". "+st.d);u.lang="ar-SA";speechSynthesis.speak(u)}
+ if(!c){lsDone();return}
+ LS.typing=true;let k=0;
+ LS.typeT=setInterval(()=>{k+=2;pre.textContent=c.slice(0,k);if(k>=c.length){clearInterval(LS.typeT);LS.typing=false;lsDone()}},22);
+}
+function lsDone(){
+ if(!LS.play)return;
+ const L=LESSONS[LS.id],st=L.steps[LS.i];
+ LS.nextT=setTimeout(()=>{if(LS.i<L.steps.length-1)lsShow(LS.i+1);else{LS.play=false;lsPlayBtn()}},Math.max(4000,st.d.length*60));
+}
+function lsGo(d){const n=LESSONS[LS.id].steps.length;lsShow(Math.min(Math.max(0,LS.i+d),n-1))}
+function lsPlayBtn(){const b=$("lsPlay");if(b)b.textContent=LS.play?"⏸ إيقاف":"▶ تشغيل"}
+function lsToggle(){
+ const last=LESSONS[LS.id].steps.length-1;
+ LS.play=!LS.play;lsPlayBtn();
+ if(!LS.play){clearTimeout(LS.nextT);if("speechSynthesis" in window)speechSynthesis.cancel();return}
+ if(LS.i===last&&!LS.typing){lsShow(0);return}
+ if(!LS.typing)lsDone();
+}
+function lsVoiceBtn(){const b=$("lsVoice");if(b)b.textContent=LS.voice?"🔊 الصوت يعمل":"🔇 تشغيل الصوت"}
+function lsVoice(){
+ if(!("speechSynthesis" in window)){toast("المتصفح لا يدعم القراءة الصوتية.","error");return}
+ LS.voice=!LS.voice;lsVoiceBtn();
+ if(LS.voice)lsShow(LS.i);else speechSynthesis.cancel();
+}
+function lsCopy(){const c=LESSONS[LS.id].steps[LS.i].c;if(c)copyText(c,"تم نسخ الكود");else toast("لا يوجد كود في هذه الخطوة.","info")}
+function useTpl(id){tplSel=id;closeLesson();newProject()}
+
 /* ============ لوحة الأوامر (Ctrl+K) ============ */
 let cmdSel=0,cmdRows=[];
 function openCmd(){
@@ -1974,6 +2394,7 @@ function renderCmd(){
   {i:"plus",t:"مشروع جديد",s:"إنشاء مشروع",fn:newProject},
   {i:"folder",t:"مشاريعي",s:"الصفحة الرئيسية",fn:goHome},
   {i:"compass",t:"استكشف المنشورات",s:"المعرض",fn:openExplore},
+  {i:"sparkle",t:"دروس وشرح",s:"تعلّم",fn:()=>openLesson()},
   {i:"user",t:"حسابي",s:"الملف والأمان",fn:openAccount},
   {i:light?"moon":"sun",t:"تبديل المظهر",s:light?"داكن":"فاتح",fn:toggleTheme},
   {i:"logout",t:"تسجيل الخروج",s:"",fn:logout}
@@ -2009,6 +2430,7 @@ document.addEventListener("keydown",e=>{
  }
  if(e.key!=="Escape")return;
  if($("dlgOv").classList.contains("open"))$("dlgCancel").click();
+ else if($("lessonOv").classList.contains("open"))closeLesson();
  else if($("pubModal").classList.contains("open"))closePub();
  else if($("cmdOv").classList.contains("open"))closeCmd();
  else if(popEl||$("sheet").classList.contains("open"))closeMenu();
