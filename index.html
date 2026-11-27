@@ -1545,17 +1545,18 @@ h1{font-size:clamp(30px,6vw,56px);line-height:1.25;margin:0 0 14px;background:li
 </style>
 </head>
 <body>
-<header><div class="lg">منتجي</div><nav><a href="#">المميزات</a><a href="#">تواصل</a></nav></header>
+<header><div class="lg">منتجي</div><nav><a href="#feat">المميزات</a><a href="#contact">تواصل</a></nav></header>
 <section class="hero">
  <h1>فكرتك تستحق أن تُرى</h1>
  <p>اكتب وصفاً قصيراً وجذاباً لمنتجك أو خدمتك هنا، وشجّع الزائر على اتخاذ الخطوة التالية.</p>
- <a class="cta" href="#">ابدأ الآن</a>
+ <a class="cta" href="#contact">ابدأ الآن</a>
 </section>
-<section class="feat">
+<section class="feat" id="feat">
  <div class="f">⚡<b>سريع</b><span>أداء عالٍ وتجربة سلسة.</span></div>
  <div class="f">🎨<b>جميل</b><span>تصميم عصري يعجب الجميع.</span></div>
  <div class="f">🔒<b>آمن</b><span>بياناتك محمية دائماً.</span></div>
 </section>
+<section id="contact" style="text-align:center;padding:50px 20px;color:#c9c6ff">📩 للتواصل: you@example.com</section>
 </body>
 </html>`},
 {id:"game",name:"لعبة النقر",desc:"تفاعلية بجافاسكربت",html:`<!DOCTYPE html>
@@ -1816,7 +1817,7 @@ function updateEdInfo(){
  $("edPos").textContent="سطر "+ln+"، عمود "+col;
  $("editorStatus").textContent=v.split("\n").length+" سطر · "+new Blob([v]).size+" بايت";
 }
-function updateLive(){$("edPreview").srcdoc=CODE.value}
+function updateLive(){$("edPreview").srcdoc=safeHtml(CODE.value)}
 function setEdMode(m){
  $("edWrap").dataset.mode=m;
  document.querySelectorAll("#edTabs .tab").forEach(t=>t.classList.toggle("selected",t.dataset.m===m));
@@ -1933,7 +1934,7 @@ function idleBar(){
  clearTimeout(playerIdle);playerIdle=setTimeout(()=>bar.classList.add("idle"),2500);
 }
 function openPlayer(html){
- playerHtml=html||"";$("playerFrame").srcdoc=playerHtml;
+ playerHtml=safeHtml(html);$("playerFrame").srcdoc=playerHtml;
  $("player").classList.add("open");document.body.classList.add("noscroll");idleBar();
  const el=$("player");if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});
 }
@@ -2380,6 +2381,10 @@ function lsVoice(){
 function lsCopy(){const c=LESSONS[LS.id].steps[LS.i].c;if(c)copyText(c,"تم نسخ الكود");else toast("لا يوجد كود في هذه الخطوة.","info")}
 function useTpl(id){tplSel=id;closeLesson();newProject()}
 
+/* روابط # داخل المشاريع: تتحرك داخل الصفحة بدل ما تفتح التطبيق من جديد */
+const FRAME_FIX='<script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href^=\\"#\\"]");if(!a)return;e.preventDefault();var id=a.getAttribute("href").slice(1),t=id&&document.getElementById(id);if(t)t.scrollIntoView({behavior:"smooth"});else window.scrollTo({top:0,behavior:"smooth"})});<\/script>';
+const safeHtml=h=>(h||"")+FRAME_FIX;
+
 /* ============ لوحة الأوامر (Ctrl+K) ============ */
 let cmdSel=0,cmdRows=[];
 function openCmd(){
@@ -2451,7 +2456,7 @@ async function loadPublicProject(){
   document.title=p.name+" - Hassan Code Studio";
   $("publicTitle").textContent=p.name||"مشروع منشور";
   $("publicOwner").textContent="بواسطة "+ownerName(p);
-  $("publicFrame").srcdoc=p.html||"";
+  $("publicFrame").srcdoc=safeHtml(p.html);
  }catch(e){console.error(e);msg("تعذر تحميل المشروع",e.message)}
 }
 
